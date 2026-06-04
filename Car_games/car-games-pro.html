@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>بازی‌های ماشین | پوریا — واردات خودرو</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+/* ============ TOKENS ============ */
+:root {
+  --bg:        #080c18;
+  --bg2:       #0d1226;
+  --bg3:       #141b35;
+  --card:      #192040;
+  --card2:     #1e2850;
+  --card3:     #243060;
+  --gold:      #f5c518;
+  --gold2:     #e08c00;
+  --gold3:     #ffd966;
+  --cyan:      #38d9f5;
+  --cyan2:     #0db8d8;
+  --green:     #22c55e;
+  --red:       #ef4444;
+  --text:      #f0f4ff;
+  --muted:     #7a87b8;
+  --muted2:    #4a5580;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.12);
+  --radius:    18px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+  --shadow-gold: 0 8px 32px -8px rgba(245,197,24,0.4);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+/* ============ RESET ============ */
+*, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Vazirmatn', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overscroll-behavior: contain;
+  background-image:
+    radial-gradient(ellipse 800px 400px at 50% -100px, rgba(56,217,245,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 300px at 100% 50%, rgba(245,197,24,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 400px 600px at -10% 80%, rgba(38,68,180,0.08) 0%, transparent 60%);
+}
+img { display: block; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+a { text-decoration: none; }
+
+/* ============ SCROLLBAR ============ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--card3); border-radius: 99px; }
+
+/* ============ LAYOUT ============ */
+.app { max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; position: relative; }
+
+/* ============ HEADER ============ */
+.header {
+  padding: 20px 16px 12px;
+  text-align: center;
+  position: relative;
+}
+.header-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.header-logo {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  box-shadow: var(--shadow-gold);
+  flex-shrink: 0;
+}
+.header h1 {
+  font-size: 22px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold3), var(--gold), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+.header-sub {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-top: 2px;
+}
+.header-contact {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.contact-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 999px;
+  font-size: 11px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.contact-chip:hover { border-color: var(--gold); color: var(--gold); }
+.contact-chip svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+/* ============ TABS ============ */
+.tabs {
+  display: flex;
+  gap: 6px;
+  padding: 10px 12px;
+  position: sticky;
+  top: 0;
+  background: linear-gradient(var(--bg), rgba(8,12,24,0.92) 80%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 100;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex: 0 0 auto;
+  padding: 10px 14px;
+  background: var(--card);
+  color: var(--muted);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 12px;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+.tab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.tab span { position: relative; z-index: 1; }
+.tab.active {
+  color: #1a0f00;
+  border-color: transparent;
+  box-shadow: var(--shadow-gold);
+}
+.tab.active::before { opacity: 1; }
+
+/* ============ CONTENT ============ */
+.tab-content { flex: 1; padding: 8px 14px 80px; }
+.panel { display: none; }
+.panel.active { display: block; animation: slideUp 0.35s cubic-bezier(0.34, 1.2, 0.64, 1); }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+}
+.card + .card { margin-top: 12px; }
+
+/* ============ BUTTONS ============ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px 20px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 15px;
+  width: 100%;
+  transition: transform 0.1s, box-shadow 0.2s, opacity 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.btn:active { transform: scale(0.97); }
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold3), var(--gold), var(--gold2));
+  color: #1a0f00;
+  box-shadow: var(--shadow-gold);
+}
+.btn-gold:hover { box-shadow: 0 12px 40px -8px rgba(245,197,24,0.6); }
+.btn-tg {
+  background: linear-gradient(135deg, #36aee8, #1d8bc4);
+  color: white;
+  box-shadow: 0 8px 24px -8px rgba(54,174,232,0.5);
+}
+.btn-phone {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  box-shadow: 0 8px 24px -8px rgba(34,197,94,0.4);
+}
+.btn-outline {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border2);
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+.btn[disabled] { opacity: 0.45; pointer-events: none; }
+
+/* ============ SECTION TITLES ============ */
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ============ PROGRESS ============ */
+.progress-wrap { margin-bottom: 16px; }
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.progress {
+  height: 5px;
+  background: var(--bg3);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan2), var(--gold));
+  border-radius: 999px;
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============ PILL / BADGE ============ */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.pill-dark { background: rgba(0,0,0,0.65); backdrop-filter: blur(10px); }
+.pill-gold { background: rgba(245,197,24,0.15); color: var(--gold3); border: 1px solid rgba(245,197,24,0.3); }
+.pill-cyan { background: rgba(56,217,245,0.12); color: var(--cyan); border: 1px solid rgba(56,217,245,0.25); }
+.pill-green { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+
+/* ========== BLUR GAME ========== */
+.blur-stage {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: var(--bg2);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.blur-stage img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: filter 0.5s ease;
+}
+.stage-overlay {
+  position: absolute;
+  top: 10px; left: 10px; right: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+.stage-hint {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 24px 12px 10px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+.opt {
+  padding: 14px 10px;
+  background: var(--card2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 13px;
+  text-align: center;
+  transition: all 0.18s;
+}
+.opt:not([disabled]):hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: rgba(56,217,245,0.06);
+}
+.opt.correct {
+  background: rgba(34,197,94,0.15);
+  border-color: var(--green);
+  color: var(--green);
+}
+.opt.wrong {
+  background: rgba(239,68,68,0.1);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.reveal-btn {
+  margin-top: 10px;
+  padding: 11px;
+  background: var(--card2);
+  border: 1px dashed var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--cyan);
+  font-size: 13px;
+  font-weight: 600;
+  width: 100%;
+  transition: all 0.18s;
+}
+.reveal-btn:not([disabled]):hover {
+  border-color: var(--cyan);
+  background: rgba(56,217,245,0.05);
+}
+
+.score-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.score-box {
+  flex: 1;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  text-align: center;
+}
+.score-box .val { font-size: 22px; font-weight: 900; color: var(--gold); }
+.score-box .lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+/* ========== QUIZ GAME ========== */
+.question-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+.question-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+  display: block;
+}
+.question-text {
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.55;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.question-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.answer-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--card2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: right;
+  margin-bottom: 8px;
+  transition: all 0.18s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.answer-btn:last-child { margin-bottom: 0; }
+.answer-btn:not([disabled]):hover {
+  border-color: var(--gold);
+  background: rgba(245,197,24,0.05);
+}
+.answer-btn .answer-icon {
+  width: 32px; height: 32px;
+  background: var(--bg2);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: all 0.18s;
+}
+.answer-btn:not([disabled]):hover .answer-icon {
+  background: rgba(245,197,24,0.15);
+}
+.answer-btn .answer-label { flex: 1; }
+.answer-btn .answer-check {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--border2);
+  flex-shrink: 0;
+  transition: all 0.18s;
+}
+.answer-btn.selected .answer-check {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+/* Dimension bar in result */
+.dim-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.dim-bar-label { font-size: 12px; color: var(--muted); width: 80px; flex-shrink: 0; text-align: right; }
+.dim-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg3);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.dim-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.8s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+.dim-bar-val { font-size: 11px; color: var(--gold); width: 28px; text-align: left; flex-shrink: 0; }
+
+/* ========== RESULT CARD ========== */
+.result-hero {
+  background: linear-gradient(135deg, rgba(245,197,24,0.1), rgba(56,217,245,0.06));
+  border: 1px solid rgba(245,197,24,0.2);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  text-align: center;
+}
+.result-car-img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+}
+.result-emoji { font-size: 52px; margin-bottom: 8px; }
+.result-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.result-name { font-size: 26px; font-weight: 900; color: var(--gold3); margin-bottom: 10px; }
+.result-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+/* ========== LEAD BOX ========== */
+.lead-box {
+  background: linear-gradient(135deg, rgba(245,197,24,0.06), rgba(56,217,245,0.04));
+  border: 1px dashed rgba(245,197,24,0.3);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-top: 14px;
+}
+.lead-box h3 {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  color: var(--gold3);
+}
+.lead-box p {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+.lead-contact-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.lead-contact-row .btn { font-size: 13px; padding: 12px; }
+.lead-divider {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted2);
+  margin: 10px 0;
+  position: relative;
+}
+.lead-divider::before, .lead-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%; width: 35%;
+  height: 1px;
+  background: var(--border);
+}
+.lead-divider::before { right: 0; }
+.lead-divider::after { left: 0; }
+
+.inp {
+  width: 100%;
+  padding: 13px 14px;
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  margin-bottom: 8px;
+}
+.inp::placeholder { color: var(--muted2); }
+.inp:focus { outline: none; border-color: var(--gold); }
+.inp:last-child { margin-bottom: 0; }
+
+.lead-success {
+  padding: 14px;
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.3);
+  border-radius: var(--radius-sm);
+  color: var(--green);
+  font-size: 14px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* ========== GAME 3: PRICE ESTIMATOR ========== */
+.price-car-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.price-car-card {
+  background: var(--card2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.price-car-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.price-car-card.selected { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(245,197,24,0.3); }
+.price-car-card img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+.price-car-info { padding: 8px 10px; }
+.price-car-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+.price-car-tag { font-size: 10px; color: var(--muted); }
+.price-car-check {
+  position: absolute;
+  top: 6px; left: 6px;
+  width: 22px; height: 22px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.price-car-card.selected .price-car-check { opacity: 1; transform: scale(1); }
+
+.price-result-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+}
+.price-range {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--gold);
+  margin: 8px 0;
+}
+.price-detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+}
+.price-detail-row:last-child { border-bottom: none; }
+.price-detail-row strong { color: var(--text); }
+
+/* ========== FOOTER ========== */
+.footer {
+  padding: 16px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted2);
+}
+.footer a { color: var(--muted); }
+
+/* ========== ANIMATIONS ========== */
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245,197,24,0.3); }
+  50%       { box-shadow: 0 0 0 8px rgba(245,197,24,0); }
+}
+.pulse { animation: pulse-gold 2s infinite; }
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.shimmer {
+  background: linear-gradient(90deg, var(--card2) 25%, var(--card3) 50%, var(--card2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.spacer { height: 12px; }
+.spacer-lg { height: 20px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-brand">
+      <div class="header-logo">🚗</div>
+      <h1>بازی‌های ماشین</h1>
+    </div>
+    <div class="header-sub">واردات خودرو قشم — مشاوره رایگان</div>
+    <div class="header-contact">
+      <a class="contact-chip" href="https://t.me/pouriabh" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="#38d9f5"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        @pouriabh
+      </a>
+      <a class="contact-chip" href="tel:09172079245">
+        <svg viewBox="0 0 24 24" fill="#22c55e"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        ۰۹۱۷۲۰۷۹۲۴۵
+      </a>
+    </div>
+  </header>
+
+  <!-- TABS -->
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="blur"><span>🔍 حدس تار</span></button>
+    <button class="tab" data-tab="personality"><span>🧠 ماشین تو</span></button>
+    <button class="tab" data-tab="price"><span>💰 قیمت‌یاب</span></button>
+  </nav>
+
+  <!-- PANELS -->
+  <main class="tab-content">
+    <section class="panel active" id="panel-blur"></section>
+    <section class="panel" id="panel-personality"></section>
+    <section class="panel" id="panel-price"></section>
+  </main>
+
+  <footer class="footer">
+    ساخته شده با ❤️ برای علاقه‌مندان خودرو<br>
+    تماس: <a href="https://t.me/pouriabh">@pouriabh</a> | <a href="tel:09172079245">۰۹۱۷۲۰۷۹۲۴۵</a>
+  </footer>
+</div>
+
+<!-- ====================================================== -->
+<!--                     CONFIG                            -->
+<!-- ====================================================== -->
+<script>
+window.APP_CONFIG = {
+  telegramUsername: 'pouriabh',
+  phoneNumber: '09172079245',
+  brandName: 'واردات خودرو قشم',
+  leadStorageKey: 'car_leads_v2',
+};
+</script>
+
+<!-- ====================================================== -->
+<!--                   CAR DATABASE                        -->
+<!-- ====================================================== -->
+<script>
+window.CAR_DB = [
+  {
+    id: 'land_cruiser',
+    name: 'تویوتا لندکروزر',
+    year: '2023',
+    tag: 'شاسی‌بلند لوکس',
+    img: 'https://images.unsplash.com/photo-1563720223809-b2e4d4e8aa73?w=600&q=80',
+    price_min: 8000, price_max: 14000,  // میلیون تومان
+    origin: 'ژاپن / امارات',
+    dims: { luxury: 8, offroad: 9, family: 9, tech: 7, economy: 3, sport: 5 },
+    personality: { emoji: '🏔️', desc: 'تو یه ماجراجوی واقعی هستی. قدرت، اطمینان و توانایی هر مسیری برات مهمه. ماشینی که هرجا بری، تو رو می‌رسونه.' }
+  },
+  {
+    id: 'bmw_x5',
+    name: 'بی‌ام‌و X5',
+    year: '2023',
+    tag: 'شاسی‌بلند اسپرت',
+    img: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&q=80',
+    price_min: 7000, price_max: 12000,
+    origin: 'آلمان',
+    dims: { luxury: 9, offroad: 6, family: 7, tech: 9, economy: 3, sport: 9 },
+    personality: { emoji: '🏙️', desc: 'تو شهری، خوش‌سلیقه و اسپرت‌پسندی. لوکس بودن برات مهمه ولی نه به قیمت از دست دادن هیجان رانندگی.' }
+  },
+  {
+    id: 'tesla_m3',
+    name: 'تسلا مدل ۳',
+    year: '2024',
+    tag: 'الکتریکی هوشمند',
+    img: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&q=80',
+    price_min: 4500, price_max: 7000,
+    origin: 'آمریکا',
+    dims: { luxury: 7, offroad: 2, family: 6, tech: 10, economy: 9, sport: 8 },
+    personality: { emoji: '⚡', desc: 'تو آینده‌نگر و تکنولوژی‌دوستی. نوآوری و طراحی مینیمال برات مهمه. می‌خوای متفاوت باشی.' }
+  },
+  {
+    id: 'prado',
+    name: 'تویوتا پرادو',
+    year: '2023',
+    tag: 'خانوادگی کوه‌نشین',
+    img: 'https://images.unsplash.com/photo-1594502184342-2e12f877aa73?w=600&q=80',
+    price_min: 5000, price_max: 9000,
+    origin: 'ژاپن',
+    dims: { luxury: 7, offroad: 8, family: 9, tech: 7, economy: 4, sport: 5 },
+    personality: { emoji: '👨‍👩‍👧', desc: 'تو خانواده‌دوست و باوقاری. می‌خوای ماشینی داشته باشی که هم آبروداره، هم برای سفر و آفرود مطمئنه.' }
+  },
+  {
+    id: 'santa_fe',
+    name: 'هیوندای سانتافه',
+    year: '2024',
+    tag: 'کراس‌اور هوشمند',
+    img: 'https://images.unsplash.com/photo-1441148345475-03a2e82f9719?w=600&q=80',
+    price_min: 2500, price_max: 4500,
+    origin: 'کره جنوبی',
+    dims: { luxury: 6, offroad: 5, family: 8, tech: 8, economy: 7, sport: 5 },
+    personality: { emoji: '🛣️', desc: 'تو تعادل دوست داری: بین لوکس و اقتصادی، شهر و سفر، تکنولوژی و راحتی. انتخاب هوشمندانه.' }
+  },
+  {
+    id: 'g_class',
+    name: 'مرسدس G-Class',
+    year: '2023',
+    tag: 'آیکون لوکس آفرود',
+    img: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=600&q=80',
+    price_min: 15000, price_max: 25000,
+    origin: 'آلمان',
+    dims: { luxury: 10, offroad: 8, family: 5, tech: 8, economy: 1, sport: 7 },
+    personality: { emoji: '👑', desc: 'تو جایگاه و پرستیژ برات اولویت اول است. جی‌کلاس فقط یک ماشین نیست، یک بیانیه است.' }
+  },
+  {
+    id: 'cayenne',
+    name: 'پورشه کاین',
+    year: '2023',
+    tag: 'SUV اسپرت آلمانی',
+    img: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&q=80',
+    price_min: 10000, price_max: 18000,
+    origin: 'آلمان',
+    dims: { luxury: 9, offroad: 5, family: 6, tech: 9, economy: 2, sport: 10 },
+    personality: { emoji: '🏎️', desc: 'تو اهل اجرا هستی. سرعت، کنترل و زیبایی آئرودینامیک برات ضروری است — نه انتخاب.' }
+  },
+  {
+    id: 'corolla',
+    name: 'تویوتا کرولا',
+    year: '2024',
+    tag: 'اقتصادی پرفروش',
+    img: 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=600&q=80',
+    price_min: 1500, price_max: 2800,
+    origin: 'ژاپن',
+    dims: { luxury: 4, offroad: 1, family: 7, tech: 6, economy: 10, sport: 3 },
+    personality: { emoji: '💼', desc: 'تو منطقی، صرفه‌جو و عملگرایی. ماشین برات وسیله است نه نمایش. کارکرد و کم‌دردسری اولویت توست.' }
+  },
+  {
+    id: 'range_rover',
+    name: 'رنج‌روور وُگ',
+    year: '2023',
+    tag: 'لوکس پریمیوم',
+    img: 'https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=600&q=80',
+    price_min: 12000, price_max: 20000,
+    origin: 'انگلستان',
+    dims: { luxury: 10, offroad: 7, family: 8, tech: 9, economy: 2, sport: 6 },
+    personality: { emoji: '🏰', desc: 'تو سبک زندگی رو جدی می‌گیری. رنج‌روور ترکیب کمال‌گرایی و راحتی است — انتخاب کسی که کمتر از بهترین قبول نمی‌کند.' }
+  },
+  {
+    id: 'lexus_lx',
+    name: 'لکسوس LX',
+    year: '2023',
+    tag: 'ژاپنی مجلل',
+    img: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=600&q=80',
+    price_min: 9000, price_max: 15000,
+    origin: 'ژاپن',
+    dims: { luxury: 9, offroad: 8, family: 9, tech: 8, economy: 3, sport: 6 },
+    personality: { emoji: '🍃', desc: 'تو به کیفیت ساخت و اطمینان بلندمدت اهمیت می‌دهی. لکسوس آرامش خیال ژاپنی در قالب لوکس غربی است.' }
+  },
+  {
+    id: 'bmw_m5',
+    name: 'بی‌ام‌و M5',
+    year: '2024',
+    tag: 'سدان اسپرت فوق‌العاده',
+    img: 'https://images.unsplash.com/photo-1523983302128-50b4d426e4cd?w=600&q=80',
+    price_min: 8500, price_max: 14000,
+    origin: 'آلمان',
+    dims: { luxury: 9, offroad: 2, family: 6, tech: 9, economy: 2, sport: 10 },
+    personality: { emoji: '🔥', desc: 'تو هیجان رو به آرامش ترجیح می‌دی. M5 قلب یه اسپرت‌کار توی لباس یه سدان لوکسه — برای کسی که هر دو رو می‌خواد.' }
+  },
+  {
+    id: 'genesis_gv80',
+    name: 'جنسیس GV80',
+    year: '2024',
+    tag: 'لوکس کره‌ای نوین',
+    img: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&q=80',
+    price_min: 4000, price_max: 7500,
+    origin: 'کره جنوبی',
+    dims: { luxury: 9, offroad: 5, family: 8, tech: 9, economy: 5, sport: 6 },
+    personality: { emoji: '✨', desc: 'تو ارزش می‌خوای، نه فقط نام. GV80 کمتر از رقبای اروپایی دیده می‌شه ولی در هر بُعد رقابت می‌کنه.' }
+  },
+];
+</script>
+
+<!-- ====================================================== -->
+<!--                   SHARED UTILS                        -->
+<!-- ====================================================== -->
+<script>
+const Shared = (() => {
+  const cfg = window.APP_CONFIG;
+
+  function el(tag, props = {}, ...children) {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(props)) {
+      if (k === 'class') e.className = v;
+      else if (k === 'html') e.innerHTML = v;
+      else if (k.startsWith('on') && typeof v === 'function') e.addEventListener(k.slice(2).toLowerCase(), v);
+      else if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
+      else if (v !== null && v !== undefined) e.setAttribute(k, v);
+    }
+    for (const c of children.flat()) {
+      if (c == null || c === false) continue;
+      e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    }
+    return e;
+  }
+
+  function saveLead(lead) {
+    try {
+      const all = JSON.parse(localStorage.getItem(cfg.leadStorageKey) || '[]');
+      all.push({ ...lead, at: Date.now() });
+      localStorage.setItem(cfg.leadStorageKey, JSON.stringify(all));
+      return true;
+    } catch { return false; }
+  }
+
+  function tgLink(msg) {
+    return `https://t.me/${cfg.telegramUsername}?text=${encodeURIComponent(msg || '')}`;
+  }
+
+  function buildLeadBox({ source, resultText, ctaMessage, shareText }) {
+    const wrap = el('div', { class: 'lead-box' });
+    wrap.appendChild(el('h3', {}, '🎯 ماشین رویاییت رو با قیمت قشم پیدا کنیم؟'));
+    wrap.appendChild(el('p', {}, 'مشاوره رایگان واردات از دبی و قشم — لیست ماشین‌های زیر قیمت بازار'));
+
+    // Contact row
+    const row = el('div', { class: 'lead-contact-row' });
+    const tgBtn = el('a', {
+      class: 'btn btn-tg',
+      href: tgLink(ctaMessage),
+      target: '_blank', rel: 'noopener',
+    });
+    tgBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg> تلگرام';
+    const phoneBtn = el('a', {
+      class: 'btn btn-phone',
+      href: `tel:${cfg.phoneNumber}`,
+    });
+    phoneBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg> تماس مستقیم';
+    row.appendChild(tgBtn);
+    row.appendChild(phoneBtn);
+    wrap.appendChild(row);
+
+    // Divider
+    wrap.appendChild(el('div', { class: 'lead-divider' }, 'یا اطلاعات تماس بذار'));
+
+    // Form
+    const nameInp = el('input', { class: 'inp', type: 'text', placeholder: '👤 نام شما (اختیاری)' });
+    const phoneInp = el('input', { class: 'inp', type: 'tel', placeholder: '📱 شماره موبایل', inputmode: 'tel' });
+    const submitBtn = el('button', { class: 'btn btn-gold', type: 'button' }, '📩 ثبت درخواست مشاوره رایگان');
+    submitBtn.addEventListener('click', () => {
+      const name = nameInp.value.trim();
+      const phone = phoneInp.value.trim();
+      if (!name && !phone) { phoneInp.focus(); return; }
+      saveLead({ source, result: resultText, name, phone });
+      // replace form with success
+      [nameInp, phoneInp, submitBtn].forEach(x => x.remove());
+      wrap.appendChild(el('div', { class: 'lead-success' }, '✅ ثبت شد! به‌زودی از طریق تلگرام یا تماس باهات در ارتباط می‌گیریم'));
+    });
+    wrap.appendChild(nameInp);
+    wrap.appendChild(phoneInp);
+    wrap.appendChild(submitBtn);
+
+    // Share
+    if (navigator.share) {
+      const shareBtn = el('button', { class: 'btn btn-outline', style: { marginTop: '8px' } }, '📤 اشتراک‌گذاری نتیجه با دوستان');
+      shareBtn.addEventListener('click', async () => {
+        try { await navigator.share({ title: cfg.brandName, text: shareText, url: location.href }); } catch {}
+      });
+      wrap.appendChild(shareBtn);
+    }
+
+    return wrap;
+  }
+
+  function initTelegram() {
+    const tg = window.Telegram?.WebApp;
+    if (!tg) return null;
+    try { tg.ready(); tg.expand(); } catch {}
+    return tg;
+  }
+
+  return { el, saveLead, tgLink, buildLeadBox, initTelegram };
+})();
+Shared.initTelegram();
+</script>
+
+<!-- ====================================================== -->
+<!--               GAME 1: BLUR GUESS                      -->
+<!-- ====================================================== -->
+<script>
+const BlurGame = (() => {
+  const { el, buildLeadBox } = Shared;
+  const CARS = window.CAR_DB;
+  const ROUNDS = 6;
+  const MAX_BLUR = 22;
+  const MIN_BLUR = 1;
+
+  let root, state;
+
+  function reset() {
+    const deck = [...CARS].sort(() => Math.random() - 0.5).slice(0, ROUNDS);
+    state = { deck, idx: 0, score: 0, blur: MAX_BLUR, answered: false, hintsUsed: 0, results: [] };
+  }
+
+  function pickOptions(correct) {
+    const others = CARS.filter(c => c.id !== correct.id).sort(() => Math.random() - 0.5).slice(0, 3);
+    return [correct, ...others].sort(() => Math.random() - 0.5);
+  }
+
+  function render() {
+    root.innerHTML = '';
+    if (state.idx >= state.deck.length) return renderEnd();
+
+    const car = state.deck[state.idx];
+    const opts = state.currentOpts || (state.currentOpts = pickOptions(car));
+
+    // Progress
+    const pct = (state.idx / state.deck.length) * 100;
+    const progWrap = el('div', { class: 'progress-wrap' });
+    progWrap.appendChild(el('div', { class: 'progress-label' },
+      el('span', {}, `🔍 دور ${state.idx + 1} از ${state.deck.length}`),
+      el('span', {}, `امتیاز: ${state.score}`)
+    ));
+    progWrap.appendChild(el('div', { class: 'progress' },
+      el('div', { class: 'progress-bar', style: { width: pct + '%' } })
+    ));
+    root.appendChild(progWrap);
+
+    // Stage
+    const stage = el('div', { class: 'blur-stage' });
+    const img = el('img', {
+      src: car.img,
+      alt: car.name,
+      style: { filter: `blur(${state.blur}px) saturate(${state.blur > 10 ? 0.5 : 1})` },
+    });
+    img.onerror = () => { img.src = `https://placehold.co/600x338/192040/7a87b8?text=${encodeURIComponent(car.name)}`; };
+    stage.appendChild(img);
+
+    // Overlay pills
+    const overlay = el('div', { class: 'stage-overlay' });
+    overlay.appendChild(el('span', { class: 'pill pill-dark' }, car.tag));
+    const scorePill = el('span', { class: 'pill', style: { background: 'rgba(245,197,24,0.85)', color: '#1a0f00' } }, `⭐ ${state.score}`);
+    overlay.appendChild(scorePill);
+    stage.appendChild(overlay);
+
+    // Bottom hint
+    if (state.blur <= MIN_BLUR) {
+      stage.appendChild(el('div', { class: 'stage-hint' }, `تصویر کاملاً واضح — می‌دونی این ماشینه؟`));
+    }
+
+    root.appendChild(stage);
+
+    // Score boxes
+    const scoreRow = el('div', { class: 'score-row' });
+    const maxPts = state.hintsUsed === 0 ? 50 : state.hintsUsed === 1 ? 35 : state.hintsUsed === 2 ? 20 : 10;
+    scoreRow.appendChild(
+      el('div', { class: 'score-box' },
+        el('div', { class: 'val' }, `${maxPts}`),
+        el('div', { class: 'lbl' }, 'امتیاز بالقوه')
+      )
+    );
+    scoreRow.appendChild(
+      el('div', { class: 'score-box' },
+        el('div', { class: 'val' }, `${state.hintsUsed}`),
+        el('div', { class: 'lbl' }, 'راهنمایی استفاده شده')
+      )
+    );
+    scoreRow.appendChild(
+      el('div', { class: 'score-box' },
+        el('div', { class: 'val' }, `${state.idx}/${state.deck.length}`),
+        el('div', { class: 'lbl' }, 'دورهای گذشته')
+      )
+    );
+    root.appendChild(scoreRow);
+
+    // Options
+    const grid = el('div', { class: 'options-grid' });
+    opts.forEach(o => {
+      const btn = el('button', { class: 'opt' }, o.name);
+      btn.addEventListener('click', () => answer(o, btn, grid));
+      grid.appendChild(btn);
+    });
+    root.appendChild(grid);
+
+    // Reveal btn
+    const revealBtn = el('button', { class: 'reveal-btn' },
+      state.blur > MIN_BLUR
+        ? `👁️ وضوح بیشتر — امتیاز کمتر (${state.blur}px blur)`
+        : '✅ تصویر کاملاً واضح است'
+    );
+    if (state.blur <= MIN_BLUR || state.answered) revealBtn.disabled = true;
+    revealBtn.addEventListener('click', () => {
+      state.blur = Math.max(MIN_BLUR, state.blur - 7);
+      state.hintsUsed++;
+      render();
+    });
+    root.appendChild(revealBtn);
+  }
+
+  function answer(picked, btn, grid) {
+    if (state.answered) return;
+    state.answered = true;
+    const car = state.deck[state.idx];
+    const correct = picked.id === car.id;
+    const pts = correct ? (state.hintsUsed === 0 ? 50 : state.hintsUsed === 1 ? 35 : state.hintsUsed === 2 ? 20 : 10) : 0;
+    state.score += pts;
+    state.results.push({ car: car.name, correct, pts });
+
+    [...grid.children].forEach(c => {
+      if (c.textContent === car.name) c.classList.add('correct');
+      else if (c === btn && !correct) c.classList.add('wrong');
+      c.disabled = true;
+    });
+
+    // Reveal image
+    const img = root.querySelector('.blur-stage img');
+    if (img) { img.style.filter = 'none'; img.style.transition = 'filter 0.6s ease'; }
+
+    setTimeout(() => {
+      state.idx++;
+      state.blur = MAX_BLUR;
+      state.answered = false;
+      state.hintsUsed = 0;
+      state.currentOpts = null;
+      render();
+    }, 1600);
+  }
+
+  function renderEnd() {
+    const maxScore = state.deck.length * 50;
+    const pct = Math.round((state.score / maxScore) * 100);
+    const correctCount = state.results.filter(r => r.correct).length;
+
+    let rank, rankColor;
+    if (pct >= 80)      { rank = '🏆 افسانه‌ای!'; rankColor = 'var(--gold)'; }
+    else if (pct >= 60) { rank = '🔥 خبره ماشین!'; rankColor = 'var(--cyan)'; }
+    else if (pct >= 40) { rank = '👍 قابل قبول!'; rankColor = 'var(--green)'; }
+    else                { rank = '🚙 تازه‌کار!'; rankColor = 'var(--muted)'; }
+
+    const hero = el('div', { class: 'result-hero' });
+    hero.appendChild(el('div', { class: 'result-emoji' }, '🏁'));
+    hero.appendChild(el('div', { style: { fontSize: '22px', fontWeight: '900', color: rankColor, marginBottom: '8px' } }, rank));
+    hero.appendChild(el('div', { style: { fontSize: '14px', color: 'var(--muted)', marginBottom: '4px' } },
+      `${correctCount} از ${state.deck.length} درست حدس زدی`
+    ));
+    hero.appendChild(el('div', { style: { fontSize: '28px', fontWeight: '900', color: 'var(--gold)', margin: '8px 0' } },
+      `${state.score} امتیاز`
+    ));
+
+    // Per-round details
+    const detailCard = el('div', { class: 'card', style: { marginTop: '12px' } });
+    detailCard.appendChild(el('div', { class: 'section-title' }, el('span', {}, 'جزئیات دورها')));
+    state.results.forEach((r, i) => {
+      const row = el('div', { class: 'price-detail-row' });
+      row.appendChild(el('span', {}, `دور ${i + 1}: ${r.car}`));
+      row.appendChild(el('strong', { style: { color: r.correct ? 'var(--green)' : 'var(--red)' } },
+        r.correct ? `+${r.pts} ✓` : '✗ اشتباه'
+      ));
+      detailCard.appendChild(row);
+    });
+
+    const playAgain = el('button', { class: 'btn btn-outline', style: { marginTop: '12px' } }, '🔄 یه بار دیگه');
+    playAgain.addEventListener('click', () => { reset(); render(); });
+
+    const lead = buildLeadBox({
+      source: 'blur_game',
+      resultText: `${correctCount}/${state.deck.length} — ${state.score} pts`,
+      ctaMessage: `سلام! تو بازی حدس ماشین تار ${correctCount} از ${state.deck.length} رو درست زدم و ${state.score} امتیاز گرفتم. می‌خوام درباره خرید ماشین وارداتی مشورت کنم 🚗`,
+      shareText: `من تو بازی حدس ماشین ${state.score} امتیاز گرفتم! تو هم امتحان کن 🚗💨`,
+    });
+
+    root.innerHTML = '';
+    root.appendChild(hero);
+    root.appendChild(detailCard);
+    root.appendChild(el('div', { class: 'spacer' }));
+    root.appendChild(playAgain);
+    root.appendChild(lead);
+  }
+
+  function init(mountEl) {
+    root = mountEl;
+    reset();
+    render();
+  }
+
+  return { init };
+})();
+</script>
+
+<!-- ====================================================== -->
+<!--             GAME 2: PERSONALITY QUIZ                  -->
+<!-- ====================================================== -->
+<script>
+const PersonalityGame = (() => {
+  const { el, buildLeadBox } = Shared;
+
+  // 8 dimensions for scientific profiling
+  const DIMS = ['luxury', 'offroad', 'family', 'tech', 'economy', 'sport'];
+  const DIM_LABELS = { luxury: 'لوکس', offroad: 'آفرود', family: 'خانوادگی', tech: 'تکنولوژی', economy: 'اقتصادی', sport: 'اسپرت' };
+  const DIM_COLORS = { luxury: '#f5c518', offroad: '#22c55e', family: '#38d9f5', tech: '#a78bfa', economy: '#fb923c', sport: '#ef4444' };
+
+  const QUESTIONS = [
+    {
+      q: 'بودجه‌ات برای ماشین چقدره؟',
+      icon: '💰',
+      sub: 'محدوده تومانی در ذهن داری؟',
+      opts: [
+        { text: 'تا ۳ میلیارد', icon: '💵', s: { economy: 4, family: 2 } },
+        { text: '۳ تا ۷ میلیارد', icon: '💴', s: { family: 3, tech: 2, sport: 1 } },
+        { text: '۷ تا ۱۵ میلیارد', icon: '💶', s: { luxury: 3, sport: 3, tech: 2 } },
+        { text: 'بالای ۱۵ میلیارد', icon: '💷', s: { luxury: 5, offroad: 2 } },
+      ]
+    },
+    {
+      q: 'در طول هفته بیشتر کجایی؟',
+      icon: '🗺️',
+      sub: 'محیط معمول رانندگیت رو بگو',
+      opts: [
+        { text: 'شهر — ترافیک و اتوبان', icon: '🏙️', s: { economy: 3, tech: 2, sport: 1 } },
+        { text: 'بین شهری — جاده آسفالت', icon: '🛣️', s: { family: 3, tech: 2 } },
+        { text: 'جاده + گاهی خاکی', icon: '🌄', s: { offroad: 3, family: 2 } },
+        { text: 'آفرود — جاده فرعی و ناهموار', icon: '⛰️', s: { offroad: 5, luxury: 1 } },
+      ]
+    },
+    {
+      q: 'خودروی بعدیت چند نفره می‌بریش؟',
+      icon: '👥',
+      sub: 'ترکیب سرنشینان معمولت',
+      opts: [
+        { text: 'فقط خودم — سولو', icon: '🧍', s: { sport: 4, tech: 2 } },
+        { text: 'دو نفره با همسر', icon: '👫', s: { luxury: 3, sport: 2, tech: 2 } },
+        { text: 'خانواده — با بچه‌ها', icon: '👨‍👩‍👧‍👦', s: { family: 5, offroad: 2 } },
+        { text: 'جمعیت متغیر — کار و شخصی', icon: '🏢', s: { family: 3, economy: 2 } },
+      ]
+    },
+    {
+      q: 'کدوم ویژگی تو رو بیشتر هیجان‌زده می‌کنه؟',
+      icon: '⚡',
+      sub: 'اولویت اصلی‌ات رو انتخاب کن',
+      opts: [
+        { text: 'شتاب و سرعت بالا', icon: '🚀', s: { sport: 5, tech: 2 } },
+        { text: 'داشبورد هوشمند و آپشن', icon: '📱', s: { tech: 5, luxury: 2 } },
+        { text: 'فضای داخلی و صندلی راحت', icon: '🛋️', s: { family: 4, luxury: 3 } },
+        { text: 'مصرف پایین و هزینه کم', icon: '⛽', s: { economy: 5, tech: 1 } },
+      ]
+    },
+    {
+      q: 'طرز نگاهت به ماشین چیه؟',
+      icon: '🎭',
+      sub: 'هویت ماشینت برات مهمه؟',
+      opts: [
+        { text: 'فقط وسیله نقلیه است', icon: '🔧', s: { economy: 4, family: 2 } },
+        { text: 'بازتاب شخصیتم است', icon: '🪞', s: { luxury: 3, sport: 3 } },
+        { text: 'ابزار ماجراجویی‌ام', icon: '🗻', s: { offroad: 5, family: 1 } },
+        { text: 'نماد موفقیتم', icon: '🏆', s: { luxury: 5, tech: 1 } },
+      ]
+    },
+    {
+      q: 'سبک رانندگیت چطوره؟',
+      icon: '🎮',
+      sub: 'پشت فرمان معمولاً چه حسی داری؟',
+      opts: [
+        { text: 'آروم و محتاط', icon: '🐢', s: { economy: 3, family: 3 } },
+        { text: 'معمولی — نه کند نه تند', icon: '😊', s: { family: 2, tech: 2 } },
+        { text: 'تند — ولی با کنترل', icon: '🦊', s: { sport: 3, tech: 2 } },
+        { text: 'هیجانی — پدال گاز همیشه پایینه', icon: '🦅', s: { sport: 5, luxury: 1 } },
+      ]
+    },
+    {
+      q: 'چقدر اهمیت می‌دی به نظر بقیه درباره ماشینت؟',
+      icon: '👁️',
+      sub: 'صادقانه بگو!',
+      opts: [
+        { text: 'اصلاً — به کسی ربط نداره', icon: '🎯', s: { economy: 3, tech: 1 } },
+        { text: 'کمی — ولی مهم نیست', icon: '🙂', s: { family: 2, economy: 2 } },
+        { text: 'تا حدی — خوب باشه کافیه', icon: '👍', s: { luxury: 2, sport: 2 } },
+        { text: 'خیلی — ماشینم باید توجه جلب کنه', icon: '✨', s: { luxury: 5 } },
+      ]
+    },
+    {
+      q: 'به کدوم برند بیشتر اعتماد داری؟',
+      icon: '🌍',
+      sub: 'برند در انتخاب تو چقدر نقش داره؟',
+      opts: [
+        { text: 'تویوتا — دوام و اطمینان', icon: '🇯🇵', s: { offroad: 2, family: 3, economy: 2 } },
+        { text: 'آلمانی — BMW / مرسدس / پورشه', icon: '🇩🇪', s: { luxury: 3, sport: 3, tech: 2 } },
+        { text: 'آمریکایی / تسلا', icon: '🇺🇸', s: { tech: 5, sport: 2 } },
+        { text: 'کره‌ای — ارزش واقعی', icon: '🇰🇷', s: { economy: 3, tech: 3, family: 2 } },
+      ]
+    },
+  ];
+
+  let root, state;
+
+  function reset() {
+    const scores = {};
+    window.CAR_DB.forEach(c => { scores[c.id] = 0; });
+    state = { idx: 0, scores, dimScores: { luxury: 0, offroad: 0, family: 0, tech: 0, economy: 0, sport: 0 } };
+  }
+
+  function render() {
+    root.innerHTML = '';
+    if (state.idx >= QUESTIONS.length) return renderResult();
+    const q = QUESTIONS[state.idx];
+    const pct = (state.idx / QUESTIONS.length) * 100;
+
+    const progWrap = el('div', { class: 'progress-wrap' });
+    progWrap.appendChild(el('div', { class: 'progress-label' },
+      el('span', {}, `${q.icon} سوال ${state.idx + 1} از ${QUESTIONS.length}`),
+      el('span', { class: 'pill pill-gold' }, `${Math.round(pct)}٪ کامل`)
+    ));
+    progWrap.appendChild(el('div', { class: 'progress' },
+      el('div', { class: 'progress-bar', style: { width: pct + '%' } })
+    ));
+    root.appendChild(progWrap);
+
+    const card = el('div', { class: 'question-card' });
+    card.appendChild(el('span', { class: 'question-icon' }, q.icon));
+    card.appendChild(el('div', { class: 'question-text' }, q.q));
+    card.appendChild(el('div', { class: 'question-sub' }, q.sub));
+
+    q.opts.forEach(o => {
+      const btn = el('button', { class: 'answer-btn' });
+      btn.appendChild(el('span', { class: 'answer-icon' }, o.icon));
+      btn.appendChild(el('span', { class: 'answer-label' }, o.text));
+      btn.appendChild(el('span', { class: 'answer-check' }));
+      btn.addEventListener('click', () => {
+        // Add scores to cars
+        Object.entries(o.s).forEach(([dim, val]) => {
+          state.dimScores[dim] = (state.dimScores[dim] || 0) + val;
+          window.CAR_DB.forEach(car => {
+            if (car.dims[dim]) {
+              state.scores[car.id] += car.dims[dim] * val * 0.1;
+            }
+          });
+        });
+        btn.classList.add('selected');
+        btn.disabled = true;
+        setTimeout(() => {
+          state.idx++;
+          render();
+        }, 350);
+      });
+      card.appendChild(btn);
+    });
+
+    root.appendChild(card);
+  }
+
+  function renderResult() {
+    // Find top car
+    const ranked = Object.entries(state.scores).sort((a, b) => b[1] - a[1]);
+    const topCarId = ranked[0][0];
+    const car = window.CAR_DB.find(c => c.id === topCarId);
+
+    const hero = el('div', { class: 'result-hero' });
+    const img = el('img', { class: 'result-car-img', src: car.img, alt: car.name });
+    img.onerror = () => { img.src = `https://placehold.co/600x338/192040/7a87b8?text=${encodeURIComponent(car.name)}`; };
+    hero.appendChild(img);
+    hero.appendChild(el('div', { class: 'result-emoji' }, car.personality.emoji));
+    hero.appendChild(el('div', { class: 'result-label' }, 'ماشین شخصیت تو هست:'));
+    hero.appendChild(el('div', { class: 'result-name' }, car.name));
+    hero.appendChild(el('div', { class: 'result-desc' }, car.personality.desc));
+    root.appendChild(hero);
+
+    // Dimension analysis
+    const dimCard = el('div', { class: 'card', style: { marginTop: '12px' } });
+    dimCard.appendChild(el('div', { class: 'section-title' }, el('span', {}, '📊 پروفایل شخصیت خودرویی شما')));
+
+    const maxDimScore = Math.max(...Object.values(state.dimScores), 1);
+    DIMS.forEach(dim => {
+      const val = state.dimScores[dim] || 0;
+      const pct = Math.round((val / maxDimScore) * 100);
+      const row = el('div', { class: 'dim-bar' });
+      row.appendChild(el('div', { class: 'dim-bar-label' }, DIM_LABELS[dim]));
+      const track = el('div', { class: 'dim-bar-track' });
+      const fill = el('div', { class: 'dim-bar-fill', style: { width: '0%', background: DIM_COLORS[dim] } });
+      track.appendChild(fill);
+      row.appendChild(track);
+      row.appendChild(el('div', { class: 'dim-bar-val' }, pct + '٪'));
+      dimCard.appendChild(row);
+      setTimeout(() => { fill.style.width = pct + '%'; }, 100);
+    });
+    root.appendChild(dimCard);
+
+    // Runner-up
+    if (ranked.length > 1) {
+      const altId = ranked[1][0];
+      const altCar = window.CAR_DB.find(c => c.id === altId);
+      const altCard = el('div', { class: 'card', style: { marginTop: '10px' } });
+      altCard.appendChild(el('div', { class: 'section-title' }, el('span', {}, '🥈 گزینه دوم تو')));
+      const altRow = el('div', { style: { display: 'flex', alignItems: 'center', gap: '12px' } });
+      const altImg = el('img', { src: altCar.img, style: { width: '72px', height: '48px', objectFit: 'cover', borderRadius: '8px', flexShrink: '0' } });
+      altImg.onerror = () => { altImg.src = `https://placehold.co/72x48/192040/7a87b8?text=car`; };
+      altRow.appendChild(altImg);
+      const altInfo = el('div', { style: { flex: '1' } });
+      altInfo.appendChild(el('div', { style: { fontWeight: '700', fontSize: '14px' } }, altCar.name));
+      altInfo.appendChild(el('div', { style: { fontSize: '12px', color: 'var(--muted)', marginTop: '2px' } }, altCar.tag));
+      altRow.appendChild(altInfo);
+      altCard.appendChild(altRow);
+      root.appendChild(altCard);
+    }
+
+    const playAgain = el('button', { class: 'btn btn-outline', style: { marginTop: '12px' } }, '🔄 دوباره تست بدم');
+    playAgain.addEventListener('click', () => { reset(); render(); });
+    root.appendChild(playAgain);
+
+    const lead = buildLeadBox({
+      source: 'personality_quiz',
+      resultText: car.name,
+      ctaMessage: `سلام! تو تست شخصیت ماشین نتیجه‌ام ${car.name} شد. می‌خوام درباره واردات این ماشین از قشم/دبی مشورت کنم 🚗`,
+      shareText: `تو تست «کدوم ماشین تویی؟» نتیجه‌ام شد: ${car.name} ${car.personality.emoji} — تو هم امتحان کن!`,
+    });
+    root.appendChild(lead);
+  }
+
+  function init(mountEl) {
+    root = mountEl;
+    reset();
+    render();
+  }
+
+  return { init };
+})();
+</script>
+
+<!-- ====================================================== -->
+<!--             GAME 3: PRICE ESTIMATOR                   -->
+<!-- ====================================================== -->
+<script>
+const PriceGame = (() => {
+  const { el, buildLeadBox } = Shared;
+
+  const YEARS = ['2022', '2023', '2024'];
+  const COLORS_FA = ['سفید', 'مشکی', 'خاکستری', 'نقره‌ای', 'سرمه‌ای', 'قرمز', 'سایر'];
+  const CONDITIONS = [
+    { label: 'صفر کیلومتر', factor: 1.0 },
+    { label: 'کارکرد کم (زیر ۳۰k)', factor: 0.88 },
+    { label: 'کارکرد متوسط (۳۰-۸۰k)', factor: 0.78 },
+    { label: 'کارکرد بالا (بالای ۸۰k)', factor: 0.68 },
+  ];
+
+  let root, state;
+
+  function reset() {
+    state = { step: 0, selectedCar: null, selectedYear: null, selectedCondition: null };
+  }
+
+  function render() {
+    root.innerHTML = '';
+
+    // Step 0: Choose car
+    const stepTitle = el('div', { class: 'section-title' });
+    if (state.step === 0) {
+      stepTitle.appendChild(el('span', {}, '1️⃣ ماشین مورد نظرت رو انتخاب کن'));
+      root.appendChild(stepTitle);
+      const grid = el('div', { class: 'price-car-grid' });
+      window.CAR_DB.forEach(car => {
+        const card = el('div', { class: `price-car-card${state.selectedCar?.id === car.id ? ' selected' : ''}` });
+        const img = el('img', { src: car.img, alt: car.name });
+        img.onerror = () => { img.src = `https://placehold.co/300x169/192040/7a87b8?text=${encodeURIComponent(car.name)}`; };
+        const check = el('div', { class: 'price-car-check' }, '✓');
+        const info = el('div', { class: 'price-car-info' });
+        info.appendChild(el('div', { class: 'price-car-name' }, car.name));
+        info.appendChild(el('div', { class: 'price-car-tag' }, car.tag));
+        card.appendChild(img);
+        card.appendChild(check);
+        card.appendChild(info);
+        card.addEventListener('click', () => {
+          state.selectedCar = car;
+          state.step = 1;
+          render();
+        });
+        grid.appendChild(card);
+      });
+      root.appendChild(grid);
+      return;
+    }
+
+    // Breadcrumb
+    const back = el('button', { class: 'btn btn-outline', style: { marginBottom: '12px' } }, '← انتخاب مجدد ماشین');
+    back.addEventListener('click', () => { state.step = 0; render(); });
+    root.appendChild(back);
+
+    // Car selected card
+    const selCard = el('div', { class: 'card', style: { display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px', padding: '12px' } });
+    const selImg = el('img', { src: state.selectedCar.img, style: { width: '80px', height: '54px', objectFit: 'cover', borderRadius: '8px', flexShrink: '0' } });
+    selImg.onerror = () => { selImg.src = `https://placehold.co/80x54/192040/7a87b8?text=car`; };
+    selCard.appendChild(selImg);
+    const selInfo = el('div');
+    selInfo.appendChild(el('div', { style: { fontWeight: '800', fontSize: '15px' } }, state.selectedCar.name));
+    selInfo.appendChild(el('div', { style: { fontSize: '12px', color: 'var(--muted)', marginTop: '2px' } }, state.selectedCar.tag));
+    selInfo.appendChild(el('span', { class: 'pill pill-gold', style: { fontSize: '11px', padding: '3px 8px', marginTop: '4px', display: 'inline-flex' } }, state.selectedCar.origin));
+    selCard.appendChild(selInfo);
+    root.appendChild(selCard);
+
+    if (state.step === 1) {
+      // Year selection
+      const t = el('div', { class: 'section-title' });
+      t.appendChild(el('span', {}, '2️⃣ سال تولید؟'));
+      root.appendChild(t);
+      YEARS.forEach(yr => {
+        const btn = el('button', {
+          class: `answer-btn${state.selectedYear === yr ? ' selected' : ''}`,
+          style: { marginBottom: '8px' }
+        });
+        btn.appendChild(el('span', { class: 'answer-icon' }, '📅'));
+        btn.appendChild(el('span', { class: 'answer-label' }, yr));
+        btn.appendChild(el('span', { class: 'answer-check' }));
+        btn.addEventListener('click', () => { state.selectedYear = yr; state.step = 2; render(); });
+        root.appendChild(btn);
+      });
+      return;
+    }
+
+    if (state.step === 2) {
+      // Condition
+      const t = el('div', { class: 'section-title' });
+      t.appendChild(el('span', {}, '3️⃣ وضعیت خودرو؟'));
+      root.appendChild(t);
+      CONDITIONS.forEach(c => {
+        const btn = el('button', { class: 'answer-btn', style: { marginBottom: '8px' } });
+        btn.appendChild(el('span', { class: 'answer-icon' }, '🔑'));
+        btn.appendChild(el('span', { class: 'answer-label' }, c.label));
+        btn.appendChild(el('span', { class: 'answer-check' }));
+        btn.addEventListener('click', () => { state.selectedCondition = c; state.step = 3; render(); });
+        root.appendChild(btn);
+      });
+      return;
+    }
+
+    if (state.step === 3) {
+      // Result
+      const car = state.selectedCar;
+      const yearFactor = state.selectedYear === '2024' ? 1.08 : state.selectedYear === '2022' ? 0.92 : 1.0;
+      const condFactor = state.selectedCondition.factor;
+      const priceMin = Math.round(car.price_min * yearFactor * condFactor / 100) * 100;
+      const priceMax = Math.round(car.price_max * yearFactor * condFactor / 100) * 100;
+
+      const resBox = el('div', { class: 'price-result-box' });
+      resBox.appendChild(el('div', { style: { fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' } }, '💡 تخمین قیمت بازار تهران'));
+      resBox.appendChild(el('div', { class: 'price-range' }, `${priceMin.toLocaleString('fa-IR')} — ${priceMax.toLocaleString('fa-IR')} میلیون`));
+      resBox.appendChild(el('div', { class: 'pill pill-cyan', style: { margin: '0 auto 12px', display: 'inline-flex' } }, '⚠️ قیمت تقریبی — با کارشناس تأیید کنید'));
+
+      const details = [
+        ['مدل', `${car.name} ${state.selectedYear}`],
+        ['وضعیت', state.selectedCondition.label],
+        ['کشور مبدأ', car.origin],
+        ['محدوده قیمت (میلیون تومان)', `${priceMin} — ${priceMax}`],
+        ['قیمت واردات قشم/دبی', 'تماس برای قیمت دقیق'],
+      ];
+      details.forEach(([k, v]) => {
+        const row = el('div', { class: 'price-detail-row' });
+        row.appendChild(el('span', {}, k));
+        row.appendChild(el('strong', {}, v));
+        resBox.appendChild(row);
+      });
+      root.appendChild(resBox);
+
+      const tryAgain = el('button', { class: 'btn btn-outline', style: { marginTop: '10px' } }, '🔄 ماشین دیگری بررسی کنم');
+      tryAgain.addEventListener('click', () => { reset(); render(); });
+      root.appendChild(tryAgain);
+
+      const lead = buildLeadBox({
+        source: 'price_estimator',
+        resultText: `${car.name} ${state.selectedYear}`,
+        ctaMessage: `سلام! می‌خوام قیمت دقیق ${car.name} مدل ${state.selectedYear} (${state.selectedCondition.label}) رو برای واردات از قشم/دبی بدونم. ممنون 🙏`,
+        shareText: `از قیمت‌یاب ماشین استفاده کردم — ${car.name} تو بازار ${priceMin} تا ${priceMax} میلیونه! تو هم امتحان کن 🚗`,
+      });
+      root.appendChild(lead);
+    }
+  }
+
+  function init(mountEl) {
+    root = mountEl;
+    reset();
+    render();
+  }
+
+  return { init };
+})();
+</script>
+
+<!-- ====================================================== -->
+<!--                  APP / TABS                           -->
+<!-- ====================================================== -->
+<script>
+(() => {
+  const tabs = document.querySelectorAll('.tab');
+  const panels = {
+    blur: document.getElementById('panel-blur'),
+    personality: document.getElementById('panel-personality'),
+    price: document.getElementById('panel-price'),
+  };
+  const initialized = {};
+  const games = { blur: BlurGame, personality: PersonalityGame, price: PriceGame };
+
+  function activate(name) {
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+    Object.entries(panels).forEach(([k, p]) => p.classList.toggle('active', k === name));
+    if (!initialized[name]) {
+      games[name].init(panels[name]);
+      initialized[name] = true;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  tabs.forEach(t => t.addEventListener('click', () => activate(t.dataset.tab)));
+  activate('blur');
+})();
+</script>
+</body>
+</html>
