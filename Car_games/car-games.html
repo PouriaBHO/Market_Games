@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>بازی‌های ماشین | قشم کار</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  /* ============ THEME ============ */
+  :root {
+    --bg: #0b1020;
+    --bg-2: #131a33;
+    --card: #1a2244;
+    --card-2: #232c55;
+    --text: #f5f7ff;
+    --muted: #9aa3c7;
+    --primary: #ffb020;
+    --primary-2: #ff8a00;
+    --accent: #4dc3ff;
+    --success: #4ade80;
+    --danger: #ef4444;
+    --border: rgba(255,255,255,0.08);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Vazirmatn', system-ui, sans-serif; min-height: 100vh; overscroll-behavior-y: contain; }
+  body { background: radial-gradient(1200px 600px at 50% -10%, #1f2a5c 0%, var(--bg) 60%); }
+  button { font-family: inherit; cursor: pointer; border: none; }
+  input { font-family: inherit; }
+
+  /* ============ LAYOUT ============ */
+  .app { max-width: 520px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+  .header { padding: 16px 16px 8px; text-align: center; }
+  .header h1 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+  .header .sub { margin-top: 4px; font-size: 12px; color: var(--muted); }
+
+  .tabs { display: flex; gap: 8px; padding: 12px 16px; position: sticky; top: 0; background: linear-gradient(var(--bg), rgba(11,16,32,0.85) 80%, transparent); backdrop-filter: blur(6px); z-index: 10; }
+  .tab { flex: 1; padding: 12px 8px; background: var(--card); color: var(--muted); border-radius: var(--radius-sm); font-weight: 600; font-size: 13px; transition: all 0.2s; border: 1px solid var(--border); }
+  .tab.active { background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: #1a1200; box-shadow: 0 8px 24px -8px rgba(255,176,32,0.5); border-color: transparent; }
+
+  .tab-content { flex: 1; padding: 8px 16px 32px; }
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ============ COMMON COMPONENTS ============ */
+  .card { background: var(--card); border-radius: var(--radius); padding: 16px; border: 1px solid var(--border); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 14px 20px; border-radius: var(--radius-sm); font-weight: 700; font-size: 15px; width: 100%; transition: transform 0.1s, opacity 0.2s; }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: #1a1200; box-shadow: 0 8px 24px -8px rgba(255,176,32,0.5); }
+  .btn-secondary { background: var(--card-2); color: var(--text); border: 1px solid var(--border); }
+  .btn-telegram { background: linear-gradient(135deg, #2ca5e0, #1d8bc4); color: white; }
+  .btn-ghost { background: transparent; color: var(--muted); }
+  .btn[disabled] { opacity: 0.5; pointer-events: none; }
+  .row { display: flex; gap: 8px; }
+  .stack > * + * { margin-top: 12px; }
+  .center { text-align: center; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; background: var(--card-2); font-size: 12px; color: var(--muted); }
+  .input { width: 100%; padding: 12px 14px; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 15px; }
+  .input:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
+
+  /* ============ LEAD BOX ============ */
+  .lead-box { margin-top: 16px; padding: 16px; background: linear-gradient(135deg, rgba(255,176,32,0.08), rgba(77,195,255,0.05)); border: 1px dashed rgba(255,176,32,0.3); border-radius: var(--radius); }
+  .lead-box h3 { margin: 0 0 4px; font-size: 16px; }
+  .lead-box p { margin: 0 0 12px; font-size: 13px; color: var(--muted); }
+  .lead-success { padding: 12px; background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); border-radius: var(--radius-sm); color: var(--success); font-size: 13px; text-align: center; }
+
+  /* ============ GAME 1: BLUR ============ */
+  .blur-stage { position: relative; aspect-ratio: 4/3; background: #000; border-radius: var(--radius); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .blur-stage img { width: 100%; height: 100%; object-fit: cover; transition: filter 0.4s ease; }
+  .blur-stage .placeholder { color: #555; font-size: 14px; padding: 20px; text-align: center; }
+  .stage-overlay { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; }
+  .pill { background: rgba(0,0,0,0.6); color: white; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; backdrop-filter: blur(8px); }
+  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .opt { padding: 14px 10px; background: var(--card-2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-weight: 600; font-size: 14px; text-align: center; }
+  .opt.correct { background: rgba(74,222,128,0.2); border-color: var(--success); color: var(--success); }
+  .opt.wrong { background: rgba(239,68,68,0.15); border-color: var(--danger); color: var(--danger); }
+  .reveal-btn { margin-top: 8px; padding: 10px; background: var(--card-2); border: 1px dashed var(--border); border-radius: var(--radius-sm); color: var(--accent); font-size: 13px; font-weight: 600; width: 100%; }
+
+  /* ============ GAME 2: PERSONALITY ============ */
+  .progress { height: 6px; background: var(--card-2); border-radius: 999px; overflow: hidden; margin-bottom: 16px; }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-2)); transition: width 0.3s; }
+  .question { font-size: 18px; font-weight: 700; margin: 0 0 16px; line-height: 1.5; }
+  .answer { padding: 14px 16px; background: var(--card-2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 15px; text-align: right; width: 100%; margin-bottom: 8px; font-weight: 500; }
+  .answer:active { background: var(--card); }
+  .result-hero { padding: 24px 16px; text-align: center; background: linear-gradient(135deg, rgba(255,176,32,0.15), rgba(77,195,255,0.1)); border: 1px solid var(--border); border-radius: var(--radius); }
+  .result-hero .emoji { font-size: 56px; margin-bottom: 8px; }
+  .result-hero h2 { margin: 0 0 8px; font-size: 24px; }
+  .result-hero p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+  /* ============ FOOTER ============ */
+  .footer { padding: 16px; text-align: center; font-size: 11px; color: var(--muted); opacity: 0.7; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <h1>🚗 بازی‌های ماشین</h1>
+    <div class="sub">با ما ماشین رویاییت رو پیدا کن</div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="blur">🔍 حدس ماشین تار</button>
+    <button class="tab" data-tab="personality">🧠 کدوم ماشین تویی؟</button>
+  </nav>
+
+  <main class="tab-content">
+    <section class="panel active" id="panel-blur"></section>
+    <section class="panel" id="panel-personality"></section>
+  </main>
+
+  <footer class="footer">ساخته شده برای علاقه‌مندان خودرو | قشم</footer>
+</div>
+
+<!-- ============================================================ -->
+<!-- ===================== CONFIG ============================= -->
+<!-- ============================================================ -->
+<script id="config">
+  // 👇 این مقادیر را قبل از انتشار ویرایش کنید
+  window.APP_CONFIG = {
+    telegramUsername: 'YOUR_USERNAME', // مثال: 'qeshm_cars'
+    brandName: 'قشم کار',
+    leadStorageKey: 'car_leads_v1',
+  };
+</script>
+
+<!-- ============================================================ -->
+<!-- ===================== SHARED UTILS ======================== -->
+<!-- ============================================================ -->
+<script id="shared">
+  const Shared = (() => {
+    const cfg = window.APP_CONFIG;
+
+    function el(tag, props = {}, ...children) {
+      const e = document.createElement(tag);
+      for (const [k, v] of Object.entries(props)) {
+        if (k === 'class') e.className = v;
+        else if (k === 'html') e.innerHTML = v;
+        else if (k.startsWith('on') && typeof v === 'function') e.addEventListener(k.slice(2).toLowerCase(), v);
+        else if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
+        else if (v !== null && v !== undefined) e.setAttribute(k, v);
+      }
+      for (const c of children.flat()) {
+        if (c == null || c === false) continue;
+        e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+      }
+      return e;
+    }
+
+    function saveLead(lead) {
+      try {
+        const all = JSON.parse(localStorage.getItem(cfg.leadStorageKey) || '[]');
+        all.push({ ...lead, at: Date.now() });
+        localStorage.setItem(cfg.leadStorageKey, JSON.stringify(all));
+        return true;
+      } catch { return false; }
+    }
+
+    function telegramLink(message) {
+      const u = encodeURIComponent(cfg.telegramUsername);
+      const t = encodeURIComponent(message || '');
+      return `https://t.me/${u}?text=${t}`;
+    }
+
+    function buildLeadBox({ source, resultText, ctaMessage, shareText }) {
+      const wrap = el('div', { class: 'lead-box stack' });
+      wrap.appendChild(el('h3', {}, '🎯 ماشین مورد علاقه‌ت رو با قیمت قشم پیدا کنیم؟'));
+      wrap.appendChild(el('p', {}, 'مشاوره رایگان واردات + لیست ماشین‌های زیر قیمت'));
+
+      // Telegram button
+      const tgBtn = el('a', {
+        class: 'btn btn-telegram',
+        href: telegramLink(ctaMessage),
+        target: '_blank',
+        rel: 'noopener',
+      }, '💬 تماس در تلگرام');
+      wrap.appendChild(tgBtn);
+
+      // Optional form
+      const form = el('form', { class: 'stack', style: { marginTop: '12px' } });
+      const nameInp = el('input', { class: 'input', type: 'text', placeholder: 'نام شما (اختیاری)' });
+      const phoneInp = el('input', { class: 'input', type: 'tel', placeholder: 'شماره موبایل (اختیاری)', inputmode: 'tel' });
+      const submitBtn = el('button', { class: 'btn btn-secondary', type: 'submit' }, '📩 ثبت درخواست تماس');
+      form.appendChild(nameInp);
+      form.appendChild(phoneInp);
+      form.appendChild(submitBtn);
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = nameInp.value.trim();
+        const phone = phoneInp.value.trim();
+        if (!name && !phone) return;
+        saveLead({ source, result: resultText, name, phone });
+        form.replaceWith(el('div', { class: 'lead-success' }, '✅ ممنون! به‌زودی باهات تماس می‌گیریم'));
+      });
+      wrap.appendChild(form);
+
+      // Share button (viral)
+      if (navigator.share) {
+        const shareBtn = el('button', { class: 'btn btn-ghost', type: 'button' }, '📤 اشتراک‌گذاری نتیجه');
+        shareBtn.addEventListener('click', async () => {
+          try { await navigator.share({ title: cfg.brandName, text: shareText, url: location.href }); }
+          catch {}
+        });
+        wrap.appendChild(shareBtn);
+      }
+
+      return wrap;
+    }
+
+    // Telegram WebApp init (no-op if outside Telegram)
+    function initTelegram() {
+      const tg = window.Telegram?.WebApp;
+      if (!tg) return null;
+      try { tg.ready(); tg.expand(); } catch {}
+      return tg;
+    }
+
+    return { el, saveLead, telegramLink, buildLeadBox, initTelegram };
+  })();
+  Shared.initTelegram();
+</script>
+
+<!-- ============================================================ -->
+<!-- ===================== GAME 1: BLUR ======================== -->
+<!-- ============================================================ -->
+<script id="game-blur">
+  const BlurGame = (() => {
+    const { el, buildLeadBox } = Shared;
+
+    // 👇 برای استفاده واقعی، src را با لینک تصویر هر ماشین جایگزین کنید
+    const CARS = [
+      { id: 'land_cruiser', name: 'تویوتا لندکروزر', src: '' },
+      { id: 'prado',        name: 'تویوتا پرادو',    src: '' },
+      { id: 'bmw_x5',       name: 'بی‌ام‌و X5',       src: '' },
+      { id: 'tesla',        name: 'تسلا مدل ۳',      src: '' },
+      { id: 'santa_fe',     name: 'هیوندای سانتافه', src: '' },
+      { id: 'corolla',      name: 'تویوتا کرولا',    src: '' },
+      { id: 'g_class',      name: 'مرسدس G-Class',  src: '' },
+      { id: 'cayenne',      name: 'پورشه کاین',      src: '' },
+    ];
+    const ROUNDS = 5;
+    const MAX_BLUR = 24;
+    const MIN_BLUR = 2;
+
+    let root, state;
+
+    function reset() {
+      const deck = [...CARS].sort(() => Math.random() - 0.5).slice(0, ROUNDS);
+      state = { deck, idx: 0, score: 0, blur: MAX_BLUR, answered: false, revealedSteps: 0, results: [] };
+    }
+
+    function pickOptions(correct) {
+      const others = CARS.filter(c => c.id !== correct.id).sort(() => Math.random() - 0.5).slice(0, 3);
+      return [correct, ...others].sort(() => Math.random() - 0.5);
+    }
+
+    function placeholderSVG(label) {
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23232c55'/><stop offset='1' stop-color='%23131a33'/></linearGradient></defs><rect width='400' height='300' fill='url(%23g)'/><text x='200' y='160' font-family='sans-serif' font-size='28' fill='%23ffb020' text-anchor='middle' font-weight='bold'>🚗</text><text x='200' y='200' font-family='sans-serif' font-size='14' fill='%239aa3c7' text-anchor='middle'>${label}</text></svg>`;
+      return `data:image/svg+xml;utf8,${svg}`;
+    }
+
+    function render() {
+      root.innerHTML = '';
+      if (state.idx >= state.deck.length) return renderEnd();
+
+      const car = state.deck[state.idx];
+      const opts = state.currentOpts || (state.currentOpts = pickOptions(car));
+
+      const stage = el('div', { class: 'blur-stage' });
+      const img = el('img', {
+        src: car.src || placeholderSVG(car.name),
+        alt: '',
+        style: { filter: `blur(${state.blur}px)` },
+      });
+      stage.appendChild(img);
+      stage.appendChild(el('div', { class: 'stage-overlay' },
+        el('span', { class: 'pill' }, `سوال ${state.idx + 1} / ${state.deck.length}`),
+        el('span', { class: 'pill' }, `امتیاز: ${state.score}`),
+      ));
+
+      const grid = el('div', { class: 'options-grid' });
+      opts.forEach(o => {
+        const btn = el('button', { class: 'opt' }, o.name);
+        btn.addEventListener('click', () => answer(o, btn, grid));
+        grid.appendChild(btn);
+      });
+
+      const revealBtn = el('button', { class: 'reveal-btn' },
+        state.blur > MIN_BLUR ? '👁️ وضوح بیشتر (امتیاز کمتر)' : 'تصویر کاملاً واضح است');
+      if (state.blur <= MIN_BLUR || state.answered) revealBtn.disabled = true;
+      revealBtn.addEventListener('click', () => {
+        state.blur = Math.max(MIN_BLUR, state.blur - 6);
+        state.revealedSteps++;
+        render();
+      });
+
+      root.appendChild(stage);
+      root.appendChild(grid);
+      root.appendChild(revealBtn);
+    }
+
+    function answer(picked, btn, grid) {
+      if (state.answered) return;
+      state.answered = true;
+      const car = state.deck[state.idx];
+      const correct = picked.id === car.id;
+      const points = correct ? Math.max(10, 50 - state.revealedSteps * 15) : 0;
+      state.score += points;
+      state.results.push({ car: car.name, correct, points });
+
+      [...grid.children].forEach(c => {
+        if (c.textContent === car.name) c.classList.add('correct');
+        else if (c === btn) c.classList.add('wrong');
+        c.disabled = true;
+      });
+
+      // reveal image
+      const img = root.querySelector('.blur-stage img');
+      if (img) img.style.filter = 'none';
+
+      setTimeout(() => {
+        state.idx++;
+        state.blur = MAX_BLUR;
+        state.answered = false;
+        state.revealedSteps = 0;
+        state.currentOpts = null;
+        render();
+      }, 1300);
+    }
+
+    function renderEnd() {
+      const max = state.deck.length * 50;
+      const pct = Math.round((state.score / max) * 100);
+      const correctCount = state.results.filter(r => r.correct).length;
+      let title = '👏 عالی بود!';
+      if (pct < 40) title = '🚙 تازه‌کاری، ولی پتانسیل داری!';
+      else if (pct < 75) title = '🔥 خوب می‌شناسیشون!';
+      else title = '🏆 تو یه ماشین‌بازی!';
+
+      const hero = el('div', { class: 'result-hero' },
+        el('div', { class: 'emoji' }, '🏁'),
+        el('h2', {}, title),
+        el('p', {}, `${correctCount} از ${state.deck.length} درست — امتیاز: ${state.score}`),
+      );
+
+      const playAgain = el('button', { class: 'btn btn-secondary' }, '🔄 یک بار دیگه');
+      playAgain.addEventListener('click', () => { reset(); render(); });
+
+      const lead = buildLeadBox({
+        source: 'blur_game',
+        resultText: `${correctCount}/${state.deck.length} (${state.score})`,
+        ctaMessage: `سلام! تو بازی حدس ماشین، ${correctCount} از ${state.deck.length} رو درست زدم. می‌خوام درباره خرید ماشین وارداتی مشورت کنم.`,
+        shareText: `من تو بازی حدس ماشین قشم‌کار ${state.score} امتیاز گرفتم! تو هم امتحان کن 🚗`,
+      });
+
+      root.innerHTML = '';
+      root.appendChild(hero);
+      const spacer = document.createElement('div'); spacer.style.height = '12px'; root.appendChild(spacer);
+      root.appendChild(playAgain);
+      root.appendChild(lead);
+    }
+
+    function init(mountEl) {
+      root = mountEl;
+      reset();
+      render();
+    }
+
+    return { init };
+  })();
+</script>
+
+<!-- ============================================================ -->
+<!-- ===================== GAME 2: PERSONALITY ================= -->
+<!-- ============================================================ -->
+<script id="game-personality">
+  const PersonalityGame = (() => {
+    const { el, buildLeadBox } = Shared;
+
+    // Cars + personality descriptions
+    const CARS = {
+      land_cruiser: { emoji: '🏔️', name: 'تویوتا لندکروزر', desc: 'تو یه ماجراجوی واقعی هستی. قدرت، اطمینان و توانایی هر مسیری برات مهمه. ماشینی که هرجا بری، تو رو می‌رسونه.' },
+      bmw:          { emoji: '🏙️', name: 'بی‌ام‌و سری ۵',   desc: 'تو شهری، خوش‌سلیقه و عملکردگرا هستی. لوکس بودن برات مهمه ولی نه به قیمت از دست دادن هیجان رانندگی.' },
+      tesla:        { emoji: '⚡',  name: 'تسلا مدل ۳',     desc: 'تو آینده‌نگر و تکنولوژی‌دوستی. نوآوری و طراحی مینیمال برات مهمه. می‌خوای متفاوت باشی.' },
+      prado:        { emoji: '👨‍👩‍👧', name: 'تویوتا پرادو',  desc: 'تو خانواده‌دوست و باوقاری. می‌خوای ماشینی داشته باشی که هم آبروداره، هم برای سفر و آفرود مطمئنه.' },
+      corolla:      { emoji: '💼', name: 'تویوتا کرولا',    desc: 'تو منطقی، صرفه‌جو و عملگرایی. ماشین برات وسیله است نه نمایش. مهم‌ترین چیز: کارکرد و کم‌دردسری.' },
+      santa_fe:     { emoji: '🛣️', name: 'هیوندای سانتافه', desc: 'تو تعادل دوست داری: بین لوکس و اقتصادی، شهر و سفر، تکنولوژی و راحتی. انتخاب هوشمندانه.' },
+    };
+
+    // questions: each option gives points to certain cars
+    const QUESTIONS = [
+      {
+        q: 'بودجه تقریبی‌ت برای ماشین چقدره؟',
+        opts: [
+          { text: 'تا ۲ میلیارد', s: { corolla: 3, santa_fe: 2 } },
+          { text: '۲ تا ۵ میلیارد', s: { santa_fe: 3, prado: 2, bmw: 1 } },
+          { text: '۵ تا ۱۰ میلیارد', s: { bmw: 3, tesla: 3, prado: 2 } },
+          { text: 'بالای ۱۰ میلیارد', s: { land_cruiser: 3, bmw: 2 } },
+        ]
+      },
+      {
+        q: 'تیپ شخصیتی‌ت بیشتر کدومه؟',
+        opts: [
+          { text: 'آرام و منطقی', s: { corolla: 3, santa_fe: 2 } },
+          { text: 'ماجراجو و پرانرژی', s: { land_cruiser: 3, prado: 2 } },
+          { text: 'لوکس‌پسند و خاص', s: { bmw: 3, tesla: 2 } },
+          { text: 'خانواده‌دوست', s: { prado: 3, santa_fe: 2 } },
+        ]
+      },
+      {
+        q: 'چقدر سفر جاده‌ای می‌ری؟',
+        opts: [
+          { text: 'تقریباً هیچ‌وقت', s: { tesla: 2, bmw: 2, corolla: 2 } },
+          { text: 'گاهی برای تفریح', s: { santa_fe: 2, bmw: 1 } },
+          { text: 'زیاد، خانوادگی', s: { prado: 3, santa_fe: 2 } },
+          { text: 'سفر و آفرود سبک زندگی‌مه', s: { land_cruiser: 3, prado: 2 } },
+        ]
+      },
+      {
+        q: 'بیشتر شهر سواری می‌کنی یا جاده؟',
+        opts: [
+          { text: 'فقط شهر', s: { tesla: 3, bmw: 2, corolla: 2 } },
+          { text: 'شهر + جاده آسفالت', s: { santa_fe: 2, bmw: 2 } },
+          { text: 'هر دو و گاهی خاکی', s: { prado: 2, santa_fe: 1 } },
+          { text: 'آفرود و ناهموار', s: { land_cruiser: 3, prado: 2 } },
+        ]
+      },
+      {
+        q: 'برات کدوم مهم‌تره؟',
+        opts: [
+          { text: 'مصرف کم سوخت', s: { corolla: 3, tesla: 2 } },
+          { text: 'تکنولوژی و آپشن', s: { tesla: 3, bmw: 2 } },
+          { text: 'قدرت و سرعت', s: { bmw: 3, land_cruiser: 2 } },
+          { text: 'فضای داخلی و راحتی', s: { prado: 2, santa_fe: 2, land_cruiser: 1 } },
+        ]
+      },
+      {
+        q: 'به کدوم برند بیشتر علاقه داری؟',
+        opts: [
+          { text: 'تویوتا (دوام)', s: { land_cruiser: 2, prado: 2, corolla: 2 } },
+          { text: 'برند آلمانی', s: { bmw: 3 } },
+          { text: 'تکنولوژی آمریکایی', s: { tesla: 3 } },
+          { text: 'کره‌ای (ارزش به قیمت)', s: { santa_fe: 3 } },
+        ]
+      },
+    ];
+
+    let root, state;
+
+    function reset() {
+      state = { idx: 0, scores: Object.fromEntries(Object.keys(CARS).map(k => [k, 0])) };
+    }
+
+    function render() {
+      root.innerHTML = '';
+      if (state.idx >= QUESTIONS.length) return renderResult();
+
+      const q = QUESTIONS[state.idx];
+      const pct = ((state.idx) / QUESTIONS.length) * 100;
+
+      const card = el('div', { class: 'card' });
+      const prog = el('div', { class: 'progress' }, el('div', { class: 'progress-bar', style: { width: pct + '%' } }));
+      card.appendChild(prog);
+      card.appendChild(el('div', { class: 'badge', style: { marginBottom: '12px' } }, `سوال ${state.idx + 1} از ${QUESTIONS.length}`));
+      card.appendChild(el('h2', { class: 'question' }, q.q));
+
+      q.opts.forEach(o => {
+        const b = el('button', { class: 'answer' }, o.text);
+        b.addEventListener('click', () => {
+          for (const [k, v] of Object.entries(o.s)) state.scores[k] += v;
+          state.idx++;
+          render();
+        });
+        card.appendChild(b);
+      });
+
+      root.appendChild(card);
+    }
+
+    function renderResult() {
+      const winnerKey = Object.entries(state.scores).sort((a, b) => b[1] - a[1])[0][0];
+      const car = CARS[winnerKey];
+
+      const hero = el('div', { class: 'result-hero' },
+        el('div', { class: 'emoji' }, car.emoji),
+        el('div', { class: 'muted', style: { marginBottom: '4px' } }, 'ماشین تو هست:'),
+        el('h2', {}, car.name),
+        el('p', {}, car.desc),
+      );
+
+      const playAgain = el('button', { class: 'btn btn-secondary' }, '🔄 دوباره تست بدم');
+      playAgain.addEventListener('click', () => { reset(); render(); });
+
+      const lead = buildLeadBox({
+        source: 'personality_quiz',
+        resultText: car.name,
+        ctaMessage: `سلام! تو تست شخصیت ماشین، نتیجه‌ام ${car.name} شد. می‌خوام درباره وارداتش از قشم/دبی مشورت کنم.`,
+        shareText: `تو تست «کدوم ماشین تویی؟» نتیجه‌ام شد: ${car.name} ${car.emoji} — تو هم تست کن!`,
+      });
+
+      root.innerHTML = '';
+      root.appendChild(hero);
+      const spacer = document.createElement('div'); spacer.style.height = '12px'; root.appendChild(spacer);
+      root.appendChild(playAgain);
+      root.appendChild(lead);
+    }
+
+    function init(mountEl) {
+      root = mountEl;
+      reset();
+      render();
+    }
+
+    return { init };
+  })();
+</script>
+
+<!-- ============================================================ -->
+<!-- ===================== APP / TABS ========================== -->
+<!-- ============================================================ -->
+<script id="app">
+  (() => {
+    const tabs = document.querySelectorAll('.tab');
+    const panels = {
+      blur: document.getElementById('panel-blur'),
+      personality: document.getElementById('panel-personality'),
+    };
+    const initialized = {};
+    const games = { blur: BlurGame, personality: PersonalityGame };
+
+    function activate(name) {
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+      Object.entries(panels).forEach(([k, p]) => p.classList.toggle('active', k === name));
+      if (!initialized[name]) {
+        games[name].init(panels[name]);
+        initialized[name] = true;
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => activate(t.dataset.tab)));
+
+    // boot
+    activate('blur');
+  })();
+</script>
+</body>
+</html>
