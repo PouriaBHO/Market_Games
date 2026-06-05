@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>بازی‌های ماشین | پوریا — واردات خودرو</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════════════════
+   MODULE 0 — CSS TOKENS (WARM CREAM PALETTE)
+═══════════════════════════════════════════════════════ */
+:root {
+  /* Warm background tones */
+  --bg:       #f5f0e8;
+  --bg2:      #ede7d9;
+  --bg3:      #e5ddc8;
+  --surface:  #fdfaf5;
+  --card:     #faf6ee;
+  --card2:    #f2ead8;
+  --card3:    #ebe0c8;
+
+  /* Gold & Amber */
+  --gold:     #b8860b;
+  --gold2:    #d4a017;
+  --gold3:    #e8c060;
+  --gold-glow: rgba(184,134,11,0.2);
+
+  /* Accent — warm saddle brown */
+  --accent:   #7c4a1e;
+  --accent2:  #9b5e2a;
+
+  /* Status */
+  --green:    #2d7a4f;
+  --red:      #b83232;
+  --blue:     #2c5f8a;
+  --cyan:     #2e8b7a;
+
+  /* Text */
+  --text:     #2c1810;
+  --text2:    #4a3020;
+  --muted:    #8a7060;
+  --muted2:   #b0987c;
+  --on-gold:  #2c1810;
+
+  /* Border */
+  --border:   rgba(120,80,40,0.15);
+  --border2:  rgba(120,80,40,0.25);
+
+  /* Shadows */
+  --shadow-sm:   0 2px 8px rgba(120,80,40,0.12);
+  --shadow-md:   0 4px 20px rgba(120,80,40,0.15);
+  --shadow-lg:   0 8px 40px rgba(120,80,40,0.2);
+  --shadow-gold: 0 4px 24px rgba(184,134,11,0.35);
+
+  /* Radii */
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r:    18px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 1 — RESET & BASE
+═══════════════════════════════════════════════════════ */
+*,*::before,*::after { box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Vazirmatn',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+/* Subtle paper texture */
+body::before {
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 700px 350px at 50% 0%, rgba(184,134,11,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 500px at 0% 80%, rgba(124,74,30,0.04) 0%, transparent 60%);
+  pointer-events:none;z-index:0;
+}
+.app { max-width:480px; margin:0 auto; min-height:100vh; position:relative; z-index:1; }
+img { display:block; }
+button { font-family:inherit; cursor:pointer; border:none; background:none; }
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 2 — LAYOUT COMPONENTS
+═══════════════════════════════════════════════════════ */
+.screen { display:none; padding:0 14px 80px; animation:screenIn .35s cubic-bezier(.4,0,.2,1); }
+.screen.active { display:block; }
+@keyframes screenIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+.card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:18px;
+  box-shadow:var(--shadow-sm);
+}
+.card+.card { margin-top:10px; }
+
+.divider {
+  height:1px;
+  background:var(--border);
+  margin:14px 0;
+}
+
+.section-label {
+  font-size:11px; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted2);
+  display:flex; align-items:center; gap:8px;
+  margin-bottom:12px;
+}
+.section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 3 — BUTTONS
+═══════════════════════════════════════════════════════ */
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:14px 20px; border-radius:var(--r-sm);
+  font-weight:700; font-size:14px; width:100%;
+  transition:transform .12s,box-shadow .2s,opacity .2s;
+  position:relative; overflow:hidden;
+}
+.btn:active { transform:scale(0.97); }
+.btn[disabled] { opacity:.4; pointer-events:none; }
+
+.btn-gold {
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  color:var(--on-gold);
+  box-shadow:var(--shadow-gold);
+}
+.btn-gold:hover { box-shadow:0 8px 32px rgba(184,134,11,0.5); transform:translateY(-1px); }
+
+.btn-accent {
+  background:linear-gradient(135deg,var(--accent2),var(--accent));
+  color:#fff8f0;
+  box-shadow:var(--shadow-md);
+}
+
+.btn-tg {
+  background:linear-gradient(135deg,#3ea8e0,#2196d3);
+  color:#fff;
+  box-shadow:0 4px 20px rgba(33,150,211,0.4);
+}
+
+.btn-phone {
+  background:linear-gradient(135deg,var(--green),#1f5c3a);
+  color:#fff;
+}
+
+.btn-outline {
+  background:transparent;
+  border:1.5px solid var(--border2);
+  color:var(--muted);
+}
+.btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+
+.btn-sm { padding:10px 16px; font-size:12px; }
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 4 — PILLS & BADGES
+═══════════════════════════════════════════════════════ */
+.pill {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:4px 12px; border-radius:999px;
+  font-size:11px; font-weight:700;
+}
+.pill-gold { background:rgba(184,134,11,0.12); color:var(--gold); border:1px solid rgba(184,134,11,0.25); }
+.pill-green { background:rgba(45,122,79,0.1); color:var(--green); border:1px solid rgba(45,122,79,0.2); }
+.pill-red { background:rgba(184,50,50,0.1); color:var(--red); border:1px solid rgba(184,50,50,0.2); }
+.pill-muted { background:var(--bg3); color:var(--muted); border:1px solid var(--border); }
+.pill-accent { background:rgba(124,74,30,0.1); color:var(--accent); border:1px solid rgba(124,74,30,0.2); }
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 5 — PROGRESS & SCORE HUD
+═══════════════════════════════════════════════════════ */
+.progress-wrap { margin-bottom:14px; }
+.progress-meta { display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:6px; }
+.progress-track {
+  height:6px; background:var(--bg3); border-radius:999px; overflow:hidden;
+}
+.progress-fill {
+  height:100%;
+  background:linear-gradient(90deg,var(--gold2),var(--gold3));
+  border-radius:999px;
+  transition:width .45s cubic-bezier(.4,0,.2,1);
+}
+.hud {
+  display:flex; gap:8px; margin-bottom:14px;
+}
+.hud-item {
+  flex:1; padding:10px 8px;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--r-sm); text-align:center;
+}
+.hud-item .hv { font-size:20px; font-weight:900; color:var(--text); }
+.hud-item .hl { font-size:10px; color:var(--muted2); margin-top:1px; }
+.hud-item.ok .hv { color:var(--green); }
+.hud-item.bad .hv { color:var(--red); }
+.hud-item.pts .hv { color:var(--gold); }
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 6 — LEAD BOX
+═══════════════════════════════════════════════════════ */
+.lead-box {
+  background:linear-gradient(135deg,rgba(184,134,11,0.08),rgba(124,74,30,0.04));
+  border:1px dashed rgba(184,134,11,0.3);
+  border-radius:var(--r);
+  padding:20px;
+  margin-top:16px;
+}
+.lead-box h3 { font-size:16px; font-weight:800; color:var(--accent); margin-bottom:4px; }
+.lead-box p { font-size:13px; color:var(--muted); margin-bottom:14px; line-height:1.65; }
+.lead-box p strong { color:var(--text2); }
+.lead-btn-row { display:flex; gap:8px; margin-bottom:10px; }
+.lead-btn-row .btn { font-size:12px; padding:11px; }
+.lead-divider { text-align:center; font-size:11px; color:var(--muted2); margin:10px 0; position:relative; }
+.lead-divider::before,.lead-divider::after {
+  content:''; position:absolute; top:50%; width:38%;
+  height:1px; background:var(--border);
+}
+.lead-divider::before { right:0; }
+.lead-divider::after { left:0; }
+.inp {
+  width:100%; padding:12px 14px;
+  background:var(--surface); border:1.5px solid var(--border2);
+  border-radius:var(--r-sm); color:var(--text);
+  font-size:14px; font-family:inherit;
+  transition:border-color .2s; margin-bottom:8px;
+}
+.inp::placeholder { color:var(--muted2); }
+.inp:focus { outline:none; border-color:var(--gold); }
+.lead-success {
+  padding:14px; text-align:center; font-size:14px; font-weight:600;
+  background:rgba(45,122,79,0.1); border:1px solid rgba(45,122,79,0.25);
+  border-radius:var(--r-sm); color:var(--green);
+}
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 7 — HOME SCREEN (GAME LOBBY)
+═══════════════════════════════════════════════════════ */
+.home-header {
+  padding:28px 14px 20px;
+  text-align:center;
+}
+.home-logo {
+  display:inline-flex; align-items:center; gap:10px;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  border-radius:var(--r-sm); padding:10px 20px;
+  margin-bottom:12px; box-shadow:var(--shadow-gold);
+}
+.home-logo span { font-family:'Playfair Display',serif; font-size:22px; color:var(--on-gold); font-weight:900; letter-spacing:.05em; }
+.home-tagline { font-size:13px; color:var(--muted); margin-bottom:4px; }
+.home-chips { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.home-chips a { text-decoration:none; }
+
+.games-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:10px; padding:0 14px 14px;
+}
+.game-card {
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:var(--r);
+  padding:18px 14px;
+  cursor:pointer;
+  transition:all .22s cubic-bezier(.34,1.2,.64,1);
+  position:relative; overflow:hidden;
+}
+.game-card::before {
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(135deg,var(--gold3),transparent);
+  opacity:0; transition:opacity .22s;
+}
+.game-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-gold); border-color:var(--gold2); }
+.game-card:hover::before { opacity:.06; }
+.game-card:active { transform:scale(0.97); }
+.game-card .gc-icon { font-size:2.4rem; margin-bottom:10px; }
+.game-card .gc-name { font-size:14px; font-weight:800; color:var(--text); margin-bottom:4px; }
+.game-card .gc-desc { font-size:11px; color:var(--muted); line-height:1.5; }
+.game-card .gc-badge {
+  position:absolute; top:10px; left:10px;
+  font-size:9px; font-weight:700; letter-spacing:.06em;
+  padding:3px 8px; border-radius:999px;
+  background:rgba(184,134,11,0.15); color:var(--gold); border:1px solid rgba(184,134,11,0.25);
+}
+.game-card.featured {
+  grid-column:1/-1;
+  display:flex; align-items:center; gap:16px; padding:20px;
+}
+.game-card.featured .gc-icon { font-size:3rem; margin-bottom:0; flex-shrink:0; }
+.game-card.featured .gc-name { font-size:16px; }
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 8 — GAME HEADER (BACK BUTTON)
+═══════════════════════════════════════════════════════ */
+.game-header {
+  display:flex; align-items:center; gap:12px;
+  padding:16px 14px 10px;
+  position:sticky; top:0; z-index:50;
+  background:rgba(245,240,232,0.9);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  margin:0 -14px 16px;
+}
+.back-btn {
+  width:36px; height:36px; border-radius:var(--r-xs);
+  background:var(--card2); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; color:var(--muted); flex-shrink:0;
+  transition:all .2s;
+}
+.back-btn:hover { border-color:var(--gold); color:var(--gold); }
+.game-header-title { font-size:15px; font-weight:800; color:var(--text); }
+.game-header-sub { font-size:11px; color:var(--muted2); }
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 9 — BLUR GAME SPECIFIC
+═══════════════════════════════════════════════════════ */
+.blur-stage {
+  position:relative; aspect-ratio:16/9;
+  background:var(--bg3); border-radius:var(--r);
+  overflow:hidden; border:1px solid var(--border);
+  margin-bottom:12px;
+}
+.blur-stage img {
+  width:100%; height:100%; object-fit:cover;
+  transition:filter .7s ease;
+}
+.blur-stage-top {
+  position:absolute; top:10px; left:10px; right:10px;
+  display:flex; justify-content:space-between; align-items:center;
+  pointer-events:none;
+}
+.blur-stage-bottom {
+  position:absolute; bottom:0; left:0; right:0;
+  padding:20px 12px 10px;
+  background:linear-gradient(transparent,rgba(44,24,16,0.6));
+  font-size:11px; color:rgba(245,240,232,0.8); text-align:center;
+}
+.opts-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;
+}
+.opt-btn {
+  padding:13px 10px;
+  background:var(--card2); border:1.5px solid var(--border);
+  border-radius:var(--r-sm); color:var(--text);
+  font-weight:700; font-size:13px; text-align:center;
+  transition:all .18s;
+}
+.opt-btn:not([disabled]):hover { border-color:var(--gold2); color:var(--gold); background:rgba(184,134,11,0.06); }
+.opt-btn.opt-correct { background:rgba(45,122,79,0.1); border-color:var(--green); color:var(--green); }
+.opt-btn.opt-wrong   { background:rgba(184,50,50,0.08); border-color:var(--red); color:var(--red); }
+.opt-btn[disabled] { cursor:default; }
+.hint-btn {
+  width:100%; padding:10px;
+  background:transparent; border:1px dashed var(--border2);
+  border-radius:var(--r-sm); color:var(--muted);
+  font-size:12px; font-weight:600;
+  transition:all .18s; margin-bottom:8px;
+}
+.hint-btn:not([disabled]):hover { border-color:var(--accent2); color:var(--accent); }
+.dots-row { display:flex; gap:5px; justify-content:center; margin-bottom:12px; }
+.dot-step {
+  height:4px; border-radius:4px;
+  background:var(--bg3); transition:all .35s;
+}
+.dot-step.done { background:var(--gold2); }
+.dot-step.now { background:var(--gold3); box-shadow:0 0 6px var(--gold-glow); }
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 10 — PERSONALITY QUIZ SPECIFIC
+═══════════════════════════════════════════════════════ */
+.q-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--r); padding:20px; margin-bottom:10px;
+  animation:screenIn .3s ease;
+}
+.q-icon { font-size:2.2rem; margin-bottom:10px; }
+.q-text { font-size:17px; font-weight:800; line-height:1.5; margin-bottom:4px; }
+.q-sub { font-size:12px; color:var(--muted); margin-bottom:16px; }
+.ans-btn {
+  display:flex; align-items:center; gap:12px;
+  width:100%; padding:13px 14px;
+  background:var(--card2); border:1.5px solid var(--border);
+  border-radius:var(--r-sm); color:var(--text);
+  font-size:13px; font-weight:600; text-align:right;
+  margin-bottom:8px; transition:all .18s; cursor:pointer;
+}
+.ans-btn:last-child { margin-bottom:0; }
+.ans-btn:not([disabled]):hover { border-color:var(--gold2); background:rgba(184,134,11,0.04); }
+.ans-icon {
+  width:32px; height:32px; border-radius:8px;
+  background:var(--bg2); display:flex; align-items:center;
+  justify-content:center; font-size:15px; flex-shrink:0; transition:.18s;
+}
+.ans-btn:hover .ans-icon { background:rgba(184,134,11,0.12); }
+.ans-btn.picked { border-color:var(--gold2); background:rgba(184,134,11,0.07); }
+.ans-btn.picked .ans-icon { background:rgba(184,134,11,0.18); }
+
+/* Dim bars */
+.dim-bar { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.dim-label { font-size:12px; color:var(--muted); width:70px; text-align:right; flex-shrink:0; }
+.dim-track { flex:1; height:6px; background:var(--bg3); border-radius:999px; overflow:hidden; }
+.dim-fill { height:100%; border-radius:999px; transition:width .8s .15s cubic-bezier(.34,1.2,.64,1); }
+.dim-val { font-size:11px; color:var(--gold); width:28px; text-align:left; flex-shrink:0; }
+
+/* Result hero */
+.result-hero {
+  background:linear-gradient(135deg,rgba(184,134,11,0.08),rgba(124,74,30,0.04));
+  border:1px solid rgba(184,134,11,0.2);
+  border-radius:var(--r); padding:22px; text-align:center;
+}
+.result-car-img {
+  width:100%; aspect-ratio:16/9; border-radius:var(--r-sm);
+  object-fit:cover; margin-bottom:14px; border:1px solid var(--border);
+}
+.result-emoji { font-size:3rem; margin-bottom:8px; }
+.result-label { font-size:11px; color:var(--muted2); letter-spacing:.08em; text-transform:uppercase; }
+.result-car-name {
+  font-family:'Playfair Display',serif;
+  font-size:26px; font-weight:900; color:var(--gold); margin:6px 0 10px;
+}
+.result-desc { font-size:13px; color:var(--muted); line-height:1.75; }
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 11 — PRICE ESTIMATOR SPECIFIC
+═══════════════════════════════════════════════════════ */
+.price-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.price-car-card {
+  background:var(--card); border:1.5px solid var(--border);
+  border-radius:var(--r-sm); overflow:hidden;
+  cursor:pointer; transition:all .2s; position:relative;
+}
+.price-car-card:hover { border-color:var(--gold2); transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.price-car-card.picked { border-color:var(--gold2); box-shadow:0 0 0 2px rgba(184,134,11,0.25); }
+.price-car-card img { width:100%; aspect-ratio:16/9; object-fit:cover; }
+.price-car-info { padding:8px 10px; }
+.price-car-name { font-size:12px; font-weight:700; }
+.price-car-tag { font-size:10px; color:var(--muted); margin-top:1px; }
+.price-check {
+  position:absolute; top:6px; left:6px;
+  width:22px; height:22px; border-radius:50%;
+  background:var(--gold2); color:var(--on-gold);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:900;
+  opacity:0; transform:scale(0);
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);
+}
+.price-car-card.picked .price-check { opacity:1; transform:scale(1); }
+.price-result {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--r); padding:20px;
+}
+.price-big { font-size:26px; font-weight:900; color:var(--gold); text-align:center; margin:8px 0; }
+.price-detail { display:flex; justify-content:space-between; font-size:13px; padding:8px 0; border-bottom:1px solid var(--border); color:var(--muted); }
+.price-detail:last-child { border:none; }
+.price-detail strong { color:var(--text); }
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 12 — SPIN WHEEL GAME
+═══════════════════════════════════════════════════════ */
+.wheel-wrap {
+  display:flex; align-items:center; justify-content:center;
+  padding:20px 0; position:relative;
+}
+.wheel-pointer {
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%) translateY(-118px);
+  font-size:1.8rem; z-index:10; filter:drop-shadow(0 2px 4px rgba(0,0,0,.3));
+}
+.wheel-canvas-wrap {
+  position:relative; display:inline-block;
+}
+canvas#wheel { border-radius:50%; box-shadow:var(--shadow-lg); }
+.wheel-result-box {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--r); padding:20px; text-align:center; margin-top:14px;
+}
+.wheel-prize-text { font-size:18px; font-weight:900; color:var(--gold); margin:8px 0; }
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 13 — COMPARE GAME (WHICH IS WORTH MORE)
+═══════════════════════════════════════════════════════ */
+.compare-vs {
+  display:grid; grid-template-columns:1fr auto 1fr; gap:10px;
+  align-items:center; margin-bottom:12px;
+}
+.compare-card {
+  background:var(--card); border:2px solid var(--border);
+  border-radius:var(--r); overflow:hidden;
+  cursor:pointer; transition:all .2s;
+}
+.compare-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-gold); border-color:var(--gold2); }
+.compare-card img { width:100%; aspect-ratio:4/3; object-fit:cover; }
+.compare-card-body { padding:10px; }
+.compare-car-name { font-size:12px; font-weight:800; }
+.compare-car-year { font-size:10px; color:var(--muted); }
+.compare-card.correct-pick { border-color:var(--green); background:rgba(45,122,79,0.05); }
+.compare-card.wrong-pick { border-color:var(--red); background:rgba(184,50,50,0.05); }
+.vs-badge {
+  width:36px; height:36px; border-radius:50%;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  color:var(--on-gold); font-weight:900; font-size:12px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:var(--shadow-gold); flex-shrink:0;
+}
+.compare-feedback {
+  text-align:center; padding:12px; border-radius:var(--r-sm);
+  font-size:14px; font-weight:700; margin-bottom:10px;
+  transition:all .3s;
+}
+.compare-feedback.ok { background:rgba(45,122,79,0.1); border:1px solid rgba(45,122,79,0.25); color:var(--green); }
+.compare-feedback.bad { background:rgba(184,50,50,0.08); border:1px solid rgba(184,50,50,0.2); color:var(--red); }
+.compare-price-reveal {
+  display:flex; gap:8px; margin-bottom:10px;
+}
+.price-reveal-box {
+  flex:1; background:var(--card2); border:1px solid var(--border);
+  border-radius:var(--r-sm); padding:10px; text-align:center;
+}
+.price-reveal-box .pr-val { font-size:15px; font-weight:900; color:var(--gold); }
+.price-reveal-box .pr-lbl { font-size:10px; color:var(--muted); margin-top:2px; }
+.price-reveal-box.winner { border-color:var(--green); background:rgba(45,122,79,0.05); }
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 14 — ADMIN PANEL
+═══════════════════════════════════════════════════════ */
+.admin-login {
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh; padding:20px;
+}
+.admin-login-box {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--r-lg); padding:32px 24px;
+  width:100%; max-width:320px; text-align:center;
+  box-shadow:var(--shadow-lg);
+}
+.admin-login-icon { font-size:3rem; margin-bottom:16px; }
+.admin-login-title { font-size:20px; font-weight:900; margin-bottom:4px; }
+.admin-login-sub { font-size:12px; color:var(--muted); margin-bottom:24px; }
+.admin-app { max-width:900px; margin:0 auto; padding:0 14px; }
+.admin-topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 0; border-bottom:1px solid var(--border);
+  margin-bottom:20px; position:sticky; top:0; z-index:100;
+  background:rgba(245,240,232,0.92); backdrop-filter:blur(10px);
+}
+.admin-topbar h1 { font-size:17px; font-weight:900; }
+.admin-tabs {
+  display:flex; gap:6px; overflow-x:auto; padding-bottom:14px;
+  scrollbar-width:none;
+}
+.admin-tabs::-webkit-scrollbar { display:none; }
+.admin-tab {
+  flex:0 0 auto; padding:8px 16px;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:999px; font-size:12px; font-weight:700; color:var(--muted);
+  transition:all .2s; white-space:nowrap;
+}
+.admin-tab.active {
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  color:var(--on-gold); border-color:transparent;
+}
+.admin-panel { display:none; animation:screenIn .3s ease; }
+.admin-panel.active { display:block; }
+
+/* Stats grid */
+.stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
+.stat-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--r-sm); padding:14px; text-align:center;
+}
+.stat-card .sv { font-size:24px; font-weight:900; color:var(--gold); }
+.stat-card .sl { font-size:10px; color:var(--muted2); margin-top:2px; }
+
+/* Leads table */
+.leads-table { width:100%; overflow-x:auto; }
+.leads-table table { width:100%; border-collapse:collapse; font-size:12px; }
+.leads-table th {
+  background:var(--card2); padding:10px 12px;
+  text-align:right; font-weight:700; color:var(--muted);
+  border-bottom:1px solid var(--border);
+}
+.leads-table td { padding:10px 12px; border-bottom:1px solid var(--border); }
+.leads-table tr:last-child td { border:none; }
+.leads-table tr:hover td { background:var(--bg2); }
+
+/* Car manager */
+.car-item {
+  display:flex; align-items:center; gap:12px;
+  padding:12px; background:var(--card);
+  border:1px solid var(--border); border-radius:var(--r-sm);
+  margin-bottom:8px;
+}
+.car-item img { width:64px; height:42px; object-fit:cover; border-radius:6px; flex-shrink:0; }
+.car-item-info { flex:1; }
+.car-item-name { font-size:13px; font-weight:700; }
+.car-item-tag { font-size:11px; color:var(--muted); }
+.car-item-actions { display:flex; gap:6px; }
+.icon-btn {
+  width:32px; height:32px; border-radius:8px;
+  background:var(--card2); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; color:var(--muted); transition:all .2s;
+}
+.icon-btn:hover { border-color:var(--gold); color:var(--gold); }
+.icon-btn.del:hover { border-color:var(--red); color:var(--red); }
+
+/* Todo list */
+.todo-item {
+  display:flex; align-items:center; gap:12px;
+  padding:12px 14px; background:var(--card);
+  border:1px solid var(--border); border-radius:var(--r-sm);
+  margin-bottom:8px; transition:all .2s;
+}
+.todo-item.done { opacity:.5; }
+.todo-check {
+  width:22px; height:22px; border-radius:6px;
+  border:2px solid var(--border2);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; cursor:pointer; transition:all .2s;
+}
+.todo-item.done .todo-check { background:var(--green); border-color:var(--green); }
+.todo-item-label { flex:1; font-size:13px; font-weight:600; }
+.todo-item-label small { display:block; font-size:11px; color:var(--muted); font-weight:400; margin-top:2px; }
+.todo-item.done .todo-item-label { text-decoration:line-through; color:var(--muted); }
+.todo-priority { font-size:10px; font-weight:700; padding:2px 8px; border-radius:999px; }
+.todo-priority.high { background:rgba(184,50,50,0.12); color:var(--red); }
+.todo-priority.mid { background:rgba(184,134,11,0.12); color:var(--gold); }
+.todo-priority.low { background:rgba(45,122,79,0.1); color:var(--green); }
+
+/* Modal */
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(44,24,16,0.5);
+  backdrop-filter:blur(6px); z-index:999;
+  display:flex; align-items:flex-end; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity .25s;
+}
+.modal-overlay.open { opacity:1; pointer-events:all; }
+.modal {
+  background:var(--surface); border-radius:var(--r-lg) var(--r-lg) 0 0;
+  padding:24px 20px; width:100%; max-width:480px;
+  max-height:85vh; overflow-y:auto;
+  transform:translateY(30px); transition:transform .3s cubic-bezier(.34,1.2,.64,1);
+}
+.modal-overlay.open .modal { transform:translateY(0); }
+.modal-title { font-size:16px; font-weight:900; margin-bottom:16px; }
+.modal-close {
+  float:left; font-size:20px; color:var(--muted);
+  cursor:pointer; line-height:1; transition:.2s;
+}
+.modal-close:hover { color:var(--red); }
+
+/* ═══════════════════════════════════════════════════════
+   MODULE 15 — UTILITY
+═══════════════════════════════════════════════════════ */
+.hidden { display:none!important; }
+.text-center { text-align:center; }
+.mt8  { margin-top:8px; }
+.mt12 { margin-top:12px; }
+.mt16 { margin-top:16px; }
+.flex { display:flex; }
+.gap8 { gap:8px; }
+.flex-1 { flex:1; }
+
+@media(max-width:380px) {
+  .games-grid { grid-template-columns:1fr; }
+  .opts-grid { grid-template-columns:1fr; }
+  .compare-vs { grid-template-columns:1fr auto 1fr; gap:6px; }
+}
+@keyframes pulse-gold {
+  0%,100% { box-shadow:0 0 0 0 rgba(184,134,11,0.35); }
+  50%      { box-shadow:0 0 0 10px rgba(184,134,11,0); }
+}
+.pulse { animation:pulse-gold 2.2s infinite; }
+@keyframes spin-anim { to { transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<!-- ═══════════════════════════════════════════════════
+     ■ DATA LAYER
+═══════════════════════════════════════════════════ -->
+<script>
+/* ── CONFIG ─────────────────────────────────── */
+window.CFG = {
+  tg: 'pouriabh',
+  phone: '09172079245',
+  brand: 'واردات خودرو قشم',
+  adminPass: '1234',       // change this!
+  leadKey: 'cg_leads_v3',
+  carKey: 'cg_cars_v3',
+  todoKey: 'cg_todos_v1',
+};
+
+/* ── CAR DATABASE ────────────────────────────── */
+window.CAR_DB = [
+  { id:'lc', name:'تویوتا لندکروزر', year:'2023', tag:'شاسی‌بلند افسانه‌ای', img:'https://images.unsplash.com/photo-1563720223809-b2e4d4e8aa73?w=600&q=80', price_min:8000, price_max:14000, origin:'ژاپن/امارات', dims:{luxury:8,offroad:9,family:9,tech:7,economy:3,sport:5}, pers:{emoji:'🏔️',desc:'تو ماجراجوی واقعی هستی. قدرت و اطمینان در هر مسیری برات اولویته.'} },
+  { id:'bmwx5', name:'بی‌ام‌و X5', year:'2023', tag:'شاسی‌بلند اسپرت آلمانی', img:'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&q=80', price_min:7000, price_max:12000, origin:'آلمان', dims:{luxury:9,offroad:6,family:7,tech:9,economy:3,sport:9}, pers:{emoji:'🏙️',desc:'شهری، باکلاس و اسپرت‌پسند. لوکس بودن برات مهمه ولی نه به قیمت هیجان رانندگی.'} },
+  { id:'ts3', name:'تسلا مدل ۳', year:'2024', tag:'الکتریکی هوشمند', img:'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&q=80', price_min:4500, price_max:7000, origin:'آمریکا', dims:{luxury:7,offroad:2,family:6,tech:10,economy:9,sport:8}, pers:{emoji:'⚡',desc:'آینده‌نگر و تکنولوژی‌دوست. نوآوری و طراحی مینیمال برات اهمیت داره.'} },
+  { id:'prado', name:'تویوتا پرادو', year:'2023', tag:'خانوادگی کوه‌نشین', img:'https://images.unsplash.com/photo-1594502184342-2e12f877aa73?w=600&q=80', price_min:5000, price_max:9000, origin:'ژاپن', dims:{luxury:7,offroad:8,family:9,tech:7,economy:4,sport:5}, pers:{emoji:'👨‍👩‍👧',desc:'خانواده‌دوست و باوقار. ماشینی که هم آبرو داره هم برای سفر مطمئنه.'} },
+  { id:'sfe', name:'هیوندای سانتافه', year:'2024', tag:'کراس‌اور هوشمند', img:'https://images.unsplash.com/photo-1441148345475-03a2e82f9719?w=600&q=80', price_min:2500, price_max:4500, origin:'کره جنوبی', dims:{luxury:6,offroad:5,family:8,tech:8,economy:7,sport:5}, pers:{emoji:'🛣️',desc:'تعادل دوست داری: بین لوکس و اقتصادی، شهر و سفر. انتخاب هوشمندانه.'} },
+  { id:'gc', name:'مرسدس G-Class', year:'2023', tag:'آیکون لوکس آفرود', img:'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=600&q=80', price_min:15000, price_max:25000, origin:'آلمان', dims:{luxury:10,offroad:8,family:5,tech:8,economy:1,sport:7}, pers:{emoji:'👑',desc:'جایگاه و پرستیژ برات اولویت اوله. G-Class فقط یه ماشین نیست، یه بیانیه‌ست.'} },
+  { id:'cay', name:'پورشه کاین', year:'2023', tag:'SUV اسپرت آلمانی', img:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&q=80', price_min:10000, price_max:18000, origin:'آلمان', dims:{luxury:9,offroad:5,family:6,tech:9,economy:2,sport:10}, pers:{emoji:'🏎️',desc:'اهل اجرایی. سرعت، کنترل و زیبایی آئرودینامیک برات ضروری‌ان.'} },
+  { id:'cor', name:'تویوتا کرولا', year:'2024', tag:'اقتصادی پرفروش', img:'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=600&q=80', price_min:1500, price_max:2800, origin:'ژاپن', dims:{luxury:4,offroad:1,family:7,tech:6,economy:10,sport:3}, pers:{emoji:'💼',desc:'منطقی، صرفه‌جو و عملگرا. ماشین برات وسیله‌ست. کارکرد و کم‌دردسری اولویته.'} },
+  { id:'rr', name:'رنج‌روور وُگ', year:'2023', tag:'لوکس پریمیوم', img:'https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=600&q=80', price_min:12000, price_max:20000, origin:'انگلستان', dims:{luxury:10,offroad:7,family:8,tech:9,economy:2,sport:6}, pers:{emoji:'🏰',desc:'سبک زندگی رو جدی می‌گیری. رنج‌روور ترکیب کمال‌گرایی و راحتیه.'} },
+  { id:'gv', name:'جنسیس GV80', year:'2024', tag:'لوکس کره‌ای نوین', img:'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&q=80', price_min:4000, price_max:7500, origin:'کره جنوبی', dims:{luxury:9,offroad:5,family:8,tech:9,economy:5,sport:6}, pers:{emoji:'✨',desc:'ارزش می‌خوای نه فقط نام. GV80 کمتر از رقبای اروپایی دیده می‌شه ولی در هر بُعد رقابت می‌کنه.'} },
+  { id:'lx', name:'لکسوس LX', year:'2023', tag:'ژاپنی مجلل', img:'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=600&q=80', price_min:9000, price_max:15000, origin:'ژاپن', dims:{luxury:9,offroad:8,family:9,tech:8,economy:3,sport:6}, pers:{emoji:'🍃',desc:'کیفیت ساخت و اطمینان بلندمدت برات مهمه. لکسوس آرامش خیال ژاپنیه.'} },
+  { id:'m5', name:'بی‌ام‌و M5', year:'2024', tag:'سدان فوق‌العاده اسپرت', img:'https://images.unsplash.com/photo-1523983302128-50b4d426e4cd?w=600&q=80', price_min:8500, price_max:14000, origin:'آلمان', dims:{luxury:9,offroad:2,family:6,tech:9,economy:2,sport:10}, pers:{emoji:'🔥',desc:'هیجان رو به آرامش ترجیح می‌دی. قلب اسپرت‌کار توی لباس سدان لوکس.'} },
+];
+
+/* ── QUIZ QUESTIONS ──────────────────────────── */
+window.QUIZ_Q = [
+  { q:'بودجه‌ات برای ماشین چقدره؟', icon:'💰', sub:'محدوده تومانی در ذهن داری؟', opts:[
+    {t:'تا ۳ میلیارد',ic:'💵',s:{economy:4,family:2}},
+    {t:'۳ تا ۷ میلیارد',ic:'💴',s:{family:3,tech:2,sport:1}},
+    {t:'۷ تا ۱۵ میلیارد',ic:'💶',s:{luxury:3,sport:3,tech:2}},
+    {t:'بالای ۱۵ میلیارد',ic:'💷',s:{luxury:5,offroad:2}},
+  ]},
+  { q:'کجا بیشتر رانندگی می‌کنی؟', icon:'🗺️', sub:'محیط معمول رانندگیت رو بگو', opts:[
+    {t:'شهر — ترافیک و اتوبان',ic:'🏙️',s:{economy:3,tech:2}},
+    {t:'بین‌شهری — جاده آسفالت',ic:'🛣️',s:{family:3,tech:2}},
+    {t:'جاده + گاهی خاکی',ic:'🌄',s:{offroad:3,family:2}},
+    {t:'آفرود — جاده فرعی',ic:'⛰️',s:{offroad:5,luxury:1}},
+  ]},
+  { q:'ماشینت چند نفره می‌بریش؟', icon:'👥', sub:'ترکیب سرنشینان معمولت', opts:[
+    {t:'فقط خودم — سولو',ic:'🧍',s:{sport:4,tech:2}},
+    {t:'دو نفره با همسر',ic:'👫',s:{luxury:3,sport:2}},
+    {t:'خانواده — با بچه‌ها',ic:'👨‍👩‍👧‍👦',s:{family:5,offroad:1}},
+    {t:'جمعیت متغیر — کار و شخصی',ic:'🏢',s:{family:3,economy:2}},
+  ]},
+  { q:'کدوم ویژگی بیشتر هیجان‌زده‌ات می‌کنه؟', icon:'⚡', sub:'اولویت اصلیت رو انتخاب کن', opts:[
+    {t:'شتاب و سرعت بالا',ic:'🚀',s:{sport:5,tech:2}},
+    {t:'داشبورد هوشمند و آپشن',ic:'📱',s:{tech:5,luxury:2}},
+    {t:'فضای داخلی و راحتی',ic:'🛋️',s:{family:4,luxury:3}},
+    {t:'مصرف پایین و هزینه کم',ic:'⛽',s:{economy:5,tech:1}},
+  ]},
+  { q:'طرز نگاهت به ماشین؟', icon:'🎭', sub:'هویت ماشینت برات مهمه؟', opts:[
+    {t:'فقط وسیله نقلیه',ic:'🔧',s:{economy:4,family:2}},
+    {t:'بازتاب شخصیتم',ic:'🪞',s:{luxury:3,sport:3}},
+    {t:'ابزار ماجراجویی',ic:'🗻',s:{offroad:5,family:1}},
+    {t:'نماد موفقیتم',ic:'🏆',s:{luxury:5,tech:1}},
+  ]},
+  { q:'سبک رانندگیت چطوره؟', icon:'🎮', sub:'پشت فرمون معمولاً چه حسی داری؟', opts:[
+    {t:'آروم و محتاط',ic:'🐢',s:{economy:3,family:3}},
+    {t:'معمولی — نه کند نه تند',ic:'😊',s:{family:2,tech:2}},
+    {t:'تند ولی با کنترل',ic:'🦊',s:{sport:3,tech:2}},
+    {t:'هیجانی — پدال گاز همیشه پایین',ic:'🦅',s:{sport:5,luxury:1}},
+  ]},
+];
+
+/* ── WHEEL PRIZES ────────────────────────────── */
+window.WHEEL_PRIZES = [
+  {label:'مشاوره رایگان', color:'#b8860b', icon:'🎁', cta:'مشاوره رایگان واردات'},
+  {label:'لیست VIP ماشین', color:'#7c4a1e', icon:'📋', cta:'دریافت لیست VIP'},
+  {label:'تخفیف ۵۰۰ دلاری', color:'#2d7a4f', icon:'💸', cta:'دریافت کد تخفیف'},
+  {label:'عکس و قیمت', color:'#2c5f8a', icon:'📸', cta:'دریافت کاتالوگ'},
+  {label:'اولویت سفارش', color:'#8b4513', icon:'⭐', cta:'ثبت اولویت'},
+  {label:'ارزیابی ماشین', color:'#4a6741', icon:'🔍', cta:'درخواست ارزیابی'},
+  {label:'راهنمای واردات', color:'#5c3d6e', icon:'📖', cta:'دریافت راهنما'},
+  {label:'دوباره بچرخ!', color:'#9b5e2a', icon:'🔄', cta:''},
+];
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     ■ SHARED MODULE
+═══════════════════════════════════════════════════ -->
+<script>
+const Shared = (() => {
+  /* DOM builder */
+  function el(tag, props={}, ...ch) {
+    const e = document.createElement(tag);
+    for (const [k,v] of Object.entries(props)) {
+      if (!v && v!==0) continue;
+      if (k==='class') e.className=v;
+      else if (k==='html') e.innerHTML=v;
+      else if (k.startsWith('on') && typeof v==='function') e.addEventListener(k.slice(2).toLowerCase(),v);
+      else if (k==='style'&&typeof v==='object') Object.assign(e.style,v);
+      else e.setAttribute(k,v);
+    }
+    ch.flat().forEach(c=>{ if(c==null||c===false)return; e.appendChild(typeof c==='string'?document.createTextNode(c):c); });
+    return e;
+  }
+
+  /* Lead storage */
+  function saveLead(lead) {
+    try {
+      const all = JSON.parse(localStorage.getItem(CFG.leadKey)||'[]');
+      all.unshift({...lead, at:Date.now()});
+      localStorage.setItem(CFG.leadKey, JSON.stringify(all));
+      return true;
+    } catch { return false; }
+  }
+  function getLeads() {
+    try { return JSON.parse(localStorage.getItem(CFG.leadKey)||'[]'); } catch { return []; }
+  }
+
+  function tgLink(msg) { return `https://t.me/${CFG.tg}?text=${encodeURIComponent(msg||'')}` }
+
+  /* Build lead capture box */
+  function buildLeadBox({source, resultText, ctaMsg, shareText}) {
+    const wrap = el('div',{class:'lead-box'});
+    wrap.appendChild(el('h3',{},'🎯 ماشین رویاییت رو با قیمت قشم پیدا کنیم؟'));
+    wrap.appendChild(el('p',{html:'مشاوره رایگان واردات از <strong>دبی و قشم</strong> — لیست ماشین‌های زیر قیمت بازار'}));
+
+    // TG + Phone
+    const row = el('div',{class:'lead-btn-row'});
+    const tgBtn = el('a',{class:'btn btn-tg',href:tgLink(ctaMsg),target:'_blank',rel:'noopener'});
+    tgBtn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg> تلگرام';
+    const phBtn = el('a',{class:'btn btn-phone',href:`tel:${CFG.phone}`});
+    phBtn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg> تماس';
+    row.appendChild(tgBtn); row.appendChild(phBtn);
+    wrap.appendChild(row);
+
+    wrap.appendChild(el('div',{class:'lead-divider'},'یا شماره بذار'));
+
+    const nameInp = el('input',{class:'inp',type:'text',placeholder:'👤 نام (اختیاری)'});
+    const phoneInp = el('input',{class:'inp',type:'tel',placeholder:'📱 شماره موبایل',inputmode:'tel'});
+    const sub = el('button',{class:'btn btn-gold mt8'},'📩 ثبت درخواست رایگان');
+    sub.addEventListener('click',()=>{
+      const name=nameInp.value.trim(), phone=phoneInp.value.trim();
+      if(!name&&!phone){ phoneInp.focus(); return; }
+      saveLead({source,result:resultText,name,phone});
+      [nameInp,phoneInp,sub].forEach(x=>x.remove());
+      wrap.appendChild(el('div',{class:'lead-success'},'✅ ثبت شد! به‌زودی باهات در ارتباط می‌گیریم 🚗'));
+    });
+    wrap.appendChild(nameInp); wrap.appendChild(phoneInp); wrap.appendChild(sub);
+
+    if(navigator.share){
+      const sBtn=el('button',{class:'btn btn-outline mt8'},'📤 اشتراک‌گذاری با دوستان');
+      sBtn.addEventListener('click',async()=>{ try{await navigator.share({title:CFG.brand,text:shareText,url:location.href});}catch{} });
+      wrap.appendChild(sBtn);
+    }
+    return wrap;
+  }
+
+  /* Router */
+  const Router = (() => {
+    let current = null;
+    function go(id) {
+      document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+      const s = document.getElementById('screen-'+id);
+      if(s){ s.classList.add('active'); current=id; window.scrollTo({top:0}); }
+    }
+    function back() { go('home'); }
+    return {go, back, getCurrent:()=>current};
+  })();
+
+  return { el, saveLead, getLeads, tgLink, buildLeadBox, Router };
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     ■ MODULE: HOME SCREEN
+═══════════════════════════════════════════════════ -->
+<script>
+const HomeScreen = (() => {
+  const {el} = Shared;
+  const GAMES = [
+    {id:'blur', icon:'🔍', name:'کدوم ماشینه؟', desc:'تصویر تاریه — با هر جواب واضح‌تر می‌شه!', badge:'محبوب', featured:false},
+    {id:'personality', icon:'🧬', name:'تو کدوم ماشینی؟', desc:'تست شخصیت ماشین — دقیق و سرگرم‌کننده', badge:'وایرال', featured:true},
+    {id:'price', icon:'💰', name:'قیمت‌یاب', desc:'قیمت واقعی هر ماشین در بازار ایران', badge:'جدید', featured:false},
+    {id:'wheel', icon:'🎡', name:'چرخ شانس', desc:'بچرخون و جایزه ببر!', badge:'هیجانی', featured:false},
+    {id:'compare', icon:'⚖️', name:'کدوم گرونتره؟', desc:'حدس بزن کدوم ماشین قیمت بالاتری داره!', badge:'چالشی', featured:false},
+  ];
+
+  function init(root) {
+    root.innerHTML='';
+
+    // Header
+    const hdr = el('div',{class:'home-header'});
+    const logo = el('div',{class:'home-logo'});
+    logo.appendChild(el('span',{},'🚗'));
+    logo.appendChild(el('span',{},'CARGAMES'));
+    hdr.appendChild(logo);
+    hdr.appendChild(el('div',{class:'home-tagline'},CFG.brand+' — مشاوره رایگان'));
+    const chips = el('div',{class:'home-chips'});
+    const tgChip = el('a',{class:'pill pill-muted',href:'https://t.me/'+CFG.tg,target:'_blank'},'📱 '+CFG.tg);
+    const phChip = el('a',{class:'pill pill-muted',href:'tel:'+CFG.phone},'📞 تماس مستقیم');
+    chips.appendChild(tgChip); chips.appendChild(phChip);
+    hdr.appendChild(chips);
+    root.appendChild(hdr);
+
+    // Section label
+    const lbl = el('div',{style:{padding:'0 14px 10px'}});
+    lbl.appendChild(el('div',{class:'section-label'},el('span',{},'🎮 بازی رو انتخاب کن')));
+    root.appendChild(lbl);
+
+    // Grid
+    const grid = el('div',{class:'games-grid'});
+    GAMES.forEach(g=>{
+      const card = el('div',{class:'game-card'+(g.featured?' featured':'')});
+      const badge = el('div',{class:'gc-badge'},g.badge);
+      card.appendChild(badge);
+      const ic = el('div',{class:'gc-icon'},g.icon);
+      const info = el('div');
+      info.appendChild(el('div',{class:'gc-name'},g.name));
+      info.appendChild(el('div',{class:'gc-desc'},g.desc));
+      card.appendChild(ic); card.appendChild(info);
+      card.addEventListener('click',()=>{ Shared.Router.go(g.id); });
+      grid.appendChild(card);
+    });
+    root.appendChild(grid);
+  }
+
+  return {init};
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     ■ MODULE: BLUR GAME
+═══════════════════════════════════════════════════ -->
+<script>
+const BlurGame = (() => {
+  const {el,buildLeadBox} = Shared;
+  const MAX_BLUR = 22, MIN_BLUR = 1, ROUNDS = 6;
+  let root, st;
+
+  function reset() {
+    const deck=[...CAR_DB].sort(()=>Math.random()-.5).slice(0,ROUNDS);
+    st={deck,idx:0,score:0,blur:MAX_BLUR,answered:false,hints:0,results:[]};
+  }
+
+  function pickOpts(car){
+    return [car,...CAR_DB.filter(c=>c.id!==car.id).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);
+  }
+
+  function render(){
+    root.innerHTML='';
+    if(st.idx>=st.deck.length) return renderEnd();
+    const car=st.deck[st.idx];
+    if(!st.opts) st.opts=pickOpts(car);
+
+    // Game header
+    const gh=el('div',{class:'game-header'});
+    const backBtn=el('button',{class:'back-btn'},'←');
+    backBtn.addEventListener('click',()=>Shared.Router.go('home'));
+    gh.appendChild(backBtn);
+    const ghInfo=el('div');
+    ghInfo.appendChild(el('div',{class:'game-header-title'},'🔍 کدوم ماشینه؟'));
+    ghInfo.appendChild(el('div',{class:'game-header-sub'},`دور ${st.idx+1} از ${ROUNDS}`));
+    gh.appendChild(ghInfo);
+    root.appendChild(gh);
+
+    // HUD
+    const hud=el('div',{class:'hud'});
+    hud.appendChild(el('div',{class:'hud-item ok'},el('div',{class:'hv'},String(st.results.filter(r=>r.ok).length)),el('div',{class:'hl'},'درست')));
+    hud.appendChild(el('div',{class:'hud-item bad'},el('div',{class:'hv'},String(st.results.filter(r=>!r.ok).length)),el('div',{class:'hl'},'اشتباه')));
+    hud.appendChild(el('div',{class:'hud-item pts'},el('div',{class:'hv'},String(st.score)),el('div',{class:'hl'},'امتیاز')));
+    root.appendChild(hud);
+
+    // Dots
+    const dotsRow=el('div',{class:'dots-row'});
+    const dw=Math.floor((Math.min(window.innerWidth,480)-60)/ROUNDS-6);
+    for(let i=0;i<ROUNDS;i++){
+      const d=el('div',{class:'dot-step'+(i<st.idx?' done':i===st.idx?' now':''),style:{width:Math.max(dw,18)+'px'}});
+      dotsRow.appendChild(d);
+    }
+    root.appendChild(dotsRow);
+
+    // Stage
+    const stage=el('div',{class:'blur-stage'});
+    const img=el('img',{src:car.img,alt:car.name,style:{filter:`blur(${st.blur}px) saturate(${st.blur>12?0.5:0.85})`}});
+    img.onerror=()=>{img.src=`https://placehold.co/600x338/ede7d9/8a7060?text=${encodeURIComponent(car.name)}`;};
+    const top=el('div',{class:'blur-stage-top'});
+    top.appendChild(el('span',{class:'pill pill-muted'},car.tag));
+    top.appendChild(el('span',{class:'pill pill-gold'},`⭐ ${st.score}`));
+    stage.appendChild(img); stage.appendChild(top);
+    if(st.blur<=MIN_BLUR) stage.appendChild(el('div',{class:'blur-stage-bottom'},'تصویر واضحه — الان می‌دونی؟'));
+    root.appendChild(stage);
+
+    // Opts
+    const grid=el('div',{class:'opts-grid'});
+    st.opts.forEach(o=>{
+      const btn=el('button',{class:'opt-btn'},o.name);
+      btn.addEventListener('click',()=>answer(o,btn,grid));
+      grid.appendChild(btn);
+    });
+    root.appendChild(grid);
+
+    // Hint
+    const pts=st.hints===0?50:st.hints===1?35:st.hints===2?20:10;
+    const hintBtn=el('button',{class:'hint-btn'},
+      st.blur>MIN_BLUR?`👁️ واضح‌تر کن — امتیاز می‌شه ${pts} (${ROUNDS-st.idx} دور مانده)`:'✅ تصویر کاملاً واضحه'
+    );
+    if(st.blur<=MIN_BLUR||st.answered) hintBtn.disabled=true;
+    hintBtn.addEventListener('click',()=>{
+      st.blur=Math.max(MIN_BLUR,st.blur-8); st.hints++;
+      render();
+    });
+    root.appendChild(hintBtn);
+  }
+
+  function answer(picked,btn,grid){
+    if(st.answered)return;
+    st.answered=true;
+    const car=st.deck[st.idx];
+    const ok=(picked.id===car.id);
+    const pts=ok?(st.hints===0?50:st.hints===1?35:st.hints===2?20:10):0;
+    st.score+=pts;
+    st.results.push({name:car.name,ok,pts});
+    [...grid.children].forEach(b=>{
+      b.disabled=true;
+      if(b.textContent===car.name) b.classList.add('opt-correct');
+      else if(b===btn&&!ok) b.classList.add('opt-wrong');
+    });
+    const img=root.querySelector('.blur-stage img');
+    if(img){img.style.transition='filter .8s ease';img.style.filter='none';}
+    setTimeout(()=>{st.idx++;st.blur=MAX_BLUR;st.answered=false;st.hints=0;st.opts=null;render();},1700);
+  }
+
+  function renderEnd(){
+    root.innerHTML='';
+
+    const gh=el('div',{class:'game-header'});
+    const backBtn=el('button',{class:'back-btn'},'←');
+    backBtn.addEventListener('click',()=>Shared.Router.go('home'));
+    gh.appendChild(backBtn);
+    const ghInfo=el('div');
+    ghInfo.appendChild(el('div',{class:'game-header-title'},'🏁 نتیجه نهایی'));
+    gh.appendChild(ghInfo);
+    root.appendChild(gh);
+
+    const ok=st.results.filter(r=>r.ok).length;
+    const pct=Math.round(ok/ROUNDS*100);
+    let emoji,rank,rankCls;
+    if(pct>=83){emoji='🏆';rank='ماشین‌شناس افسانه‌ای!';rankCls='pill-gold';}
+    else if(pct>=50){emoji='🔥';rank='خبره ماشین!';rankCls='pill-green';}
+    else{emoji='😅';rank='تازه‌کاری — تمرین کن!';rankCls='pill-muted';}
+
+    const hero=el('div',{class:'result-hero'});
+    hero.appendChild(el('div',{class:'result-emoji'},emoji));
+    hero.appendChild(el('div',{class:'result-car-name',style:{marginTop:'0'}},`${st.score} امتیاز`));
+    hero.appendChild(el('span',{class:'pill '+rankCls},rank));
+    hero.appendChild(el('div',{style:{marginTop:'10px',fontSize:'13px',color:'var(--muted)'}},`${ok} از ${ROUNDS} ماشین رو درست شناختی`));
+    root.appendChild(hero);
+
+    // Detail
+    const det=el('div',{class:'card mt12'});
+    det.appendChild(el('div',{class:'section-label'},el('span',{},'جزئیات دورها')));
+    st.results.forEach((r,i)=>{
+      const row=el('div',{class:'price-detail'});
+      row.appendChild(el('span',{},`دور ${i+1}: ${r.name}`));
+      row.appendChild(el('strong',{style:{color:r.ok?'var(--green)':'var(--red)'}},r.ok?`+${r.pts} ✓`:'✗'));
+      det.appendChild(row);
+    });
+    root.appendChild(det);
+
+    const again=el('button',{class:'btn btn-outline mt12'},'🔄 بازی مجدد');
+    again.addEventListener('click',()=>{reset();render();});
+    root.appendChild(again);
+
+    root.appendChild(buildLeadBox({
+      source:'blur_game',resultText:`${ok}/${ROUNDS} — ${st.score}pts`,
+      ctaMsg:`سلام! تو بازی حدس ماشین ${ok} از ${ROUNDS} رو درست زدم و ${st.score} امتیاز گرفتم. می‌خوام درباره واردات مشاوره کنم 🚗`,
+      shareText:`${st.score} امتیاز تو بازی حدس ماشین گرفتم! تو هم امتحان کن 🚗`
+    }));
+  }
+
+  function init(mountEl){root=mountEl;reset();render();}
+  return {init};
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     ■ MODULE: PERSONALITY GAME
+═══════════════════════════════════════════════════ -->
+<script>
+const PersonalityGame = (() => {
+  const {el,buildLeadBox} = Shared;
+  const DIMS=['luxury','offroad','family','tech','economy','sport'];
+  const DIM_LABELS={luxury:'لوکس',offroad:'آفرود',family:'خانوادگی',tech:'تکنولوژی',economy:'اقتصادی',sport:'اسپرت'};
+  const DIM_COLORS={luxury:'#b8860b',offroad:'#2d7a4f',family:'#2c5f8a',tech:'#7c4a1e',economy:'#8b7355',sport:'#b83232'};
+  let root, st;
+
+  function reset(){
+    const scores={};
+    CAR_DB.forEach(c=>{scores[c.id]=0;});
+    st={idx:0,scores,dimScores:{luxury:0,offroad:0,family:0,tech:0,economy:0,sport:0}};
+  }
+
+  function render(){
+    root.innerHTML='';
+    if(st.idx>=QUIZ_Q.length) return renderResult();
+    const q=QUIZ_Q[st.idx];
+    const pct=(st.idx/QUIZ_Q.length)*100;
+
+    const gh=el('div',{class:'game-header'});
+    const backBtn=el('button',{class:'back-btn'},'←');
+    backBtn.addEventListener('click',()=>Shared.Router.go('home'));
+    gh.appendChild(backBtn);
+    const ghInfo=el('div');
+    ghInfo.appendChild(el('div',{class:'game-header-title'},'🧬 تو کدوم ماشینی؟'));
+    ghInfo.appendChild(el('div',{class:'game-header-sub'},`سوال ${st.idx+1} از ${QUIZ_Q.length}`));
+    gh.appendChild(ghInfo);
+    root.appendChild(gh);
+
+    const pw=el('div',{class:'progress-wrap'});
+    pw.appendChild(el('div',{class:'progress-meta'},el('span',{},q.icon+' '+q.q.substring(0,20)+'…'),el('span',{class:'pill pill-gold'},Math.round(pct)+'٪')));
+    pw.appendChild(el('div',{class:'progress-track'},el('div',{class:'progress-fill',style:{width:pct+'%'}})));
+    root.appendChild(pw);
+
+    const qcard=el('div',{class:'q-card'});
+    qcard.appendChild(el('div',{class:'q-icon'},q.icon));
+    qcard.appendChild(el('div',{class:'q-text'},q.q));
+    qcard.appendChild(el('div',{class:'q-sub'},q.sub));
+    q.opts.forEach(o=>{
+      const btn=el('button',{class:'ans-btn'});
+      btn.appendChild(el('span',{class:'ans-icon'},o.ic));
+      btn.appendChild(el('span',{class:'flex-1'},o.t));
+      btn.addEventListener('click',()=>{
+        Object.entries(o.s).forEach(([d,v])=>{
+          st.dimScores[d]=(st.dimScores[d]||0)+v;
+          CAR_DB.forEach(c=>{ if(c.dims[d]) st.scores[c.id]+=c.dims[d]*v*0.1; });
+        });
+        btn.classList.add('picked');
+        btn.disabled=true;
+        setTimeout(()=>{st.idx++;render();},350);
+      });
+      qcard.appendChild(btn);
+    });
+    root.appendChild(qcard);
+  }
+
+  function renderResult(){
+    root.innerHTML='';
+    const ranked=Object.entries(st.scores).sort((a,b)=>b[1]-a[1]);
+    const car=CAR_DB.find(c=>c.id===ranked[0][0]);
+    const maxDim=Math.max(...Object.values(st.dimScores),1);
+
+    const gh=el('div',{class:'game-header'});
+    const backBtn=el('button',{class:'back-btn'},'←');
+    backBtn.addEventListener('click',()=>Shared.Router.go('home'));
+    gh.appendChild(backBtn);
+    const ghInfo=el('div');
+    ghInfo.appendChild(el('div',{class:'game-header-title'},'🎉 نتیجه شخصیت‌سنجی'));
+    gh.appendChild(ghInfo);
+    root.appendChild(gh);
+
+    const hero=el('div',{class:'result-hero'});
+    const rImg=el('img',{class:'result-car-img',src:car.img,alt:car.name});
+    rImg.onerror=()=>{rImg.src=`https://placehold.co/600x338/ede7d9/8a7060?text=${encodeURIComponent(car.name)}`;};
+    hero.appendChild(rImg);
+    hero.appendChild(el('div',{class:'result-emoji'},car.pers.emoji));
+    hero.appendChild(el('div',{class:'result-label'},'ماشین شخصیت تو:'));
+    hero.appendChild(el('div',{class:'result-car-name'},car.name));
+    hero.appendChild(el('div',{class:'result-desc'},car.pers.desc));
+    root.appendChild(hero);
+
+    // Dim analysis
+    const dimCard=el('div',{class:'card mt12'});
+    dimCard.appendChild(el('div',{class:'section-label'},el('span',{},'📊 پروفایل شخصیت خودرویی')));
+    DIMS.forEach(d=>{
+      const v=st.dimScores[d]||0;
+      const pct=Math.round(v/maxDim*100);
+      const row=el('div',{class:'dim-bar'});
+      row.appendChild(el('div',{class:'dim-label'},DIM_LABELS[d]));
+      const track=el('div',{class:'dim-track'});
+      const fill=el('div',{class:'dim-fill',style:{width:'0%',background:DIM_COLORS[d]}});
+      track.appendChild(fill);
+      row.appendChild(track);
+      row.appendChild(el('div',{class:'dim-val'},pct+'٪'));
+      dimCard.appendChild(row);
+      setTimeout(()=>{fill.style.width=pct+'%';},150);
+    });
+    root.appendChild(dimCard);
+
+    // Runner-up
+    if(ranked.length>1){
+      const alt=CAR_DB.find(c=>c.id===ranked[1][0]);
+      const altCard=el('div',{class:'card mt12'});
+      altCard.appendChild(el('div',{class:'section-label'},el('span',{},'🥈 گزینه دوم تو')));
+      const altRow=el('div',{class:'car-item'});
+      const altImg=el('img',{src:alt.img,style:{width:'64px',height:'42px',objectFit:'cover',borderRadius:'6px',flexShrink:'0'}});
+      altImg.onerror=()=>{altImg.style.display='none';};
+      const altInfo=el('div',{class:'car-item-info'});
+      altInfo.appendChild(el('div',{class:'car-item-name'},alt.name));
+      altInfo.appendChild(el('div',{class:'car-item-tag'},alt.tag));
+      altRow.appendChild(altImg); altRow.appendChild(altInfo);
+      altCard.appendChild(altRow);
+      root.appendChild(altCard);
+    }
+
+    const again=el('button',{class:'btn btn-outline mt12'},'🔄 دوباره تست بده');
+    again.addEventListener('click',()=>{reset();render();});
+    root.appendChild(again);
+
+    root.appendChild(buildLeadBox({
+      source:'personality',resultText:car.name,
+      ctaMsg:`سلام! تو تست ماشین شخصیتم شد ${car.name} ${car.pers.emoji}. می‌خوام درباره واردات این ماشین مشاوره کنم 🚗`,
+      shareText:`تو تست «کدوم ماشین هستی؟» نتیجه‌ام شد: ${car.name} ${car.pers.emoji} — تو هم امتحان کن!`
+    }));
+  }
+
+  function init(mountEl){root=mountEl;reset();render();}
+  return {init};
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     ■ MODULE: PRICE GAME
+═══════════════════════════════════════════════════ -->
+<script>
+const PriceGame = (() => {
+  const {el,buildLeadBox} = Shared;
+  const YEARS=['2022','2023','2024'];
+  const CONDS=[
+    {l:'صفر کیلومتر',f:1.0},{l:'کارکرد کم (زیر ۳۰k)',f:0.88},
+    {l:'کارکرد متوسط (۳۰-۸۰k)',f:0.78},{l:'کارکرد بالا (بالای ۸۰k)',f:0.68}
+  ];
+  let root, st;
+
+  function reset(){ st={step:0,car:null,year:null,cond:null}; }
+
+  function header(){
+    const gh=el('div',{class:'game-header'});
+    const backBtn=el('button',{class:'back-btn'},'←');
+    backBtn.addEventListener('click',()=>{ if(st.step>0){st.step--;render();}else Shared.Router.go('home'); });
+    gh.appendChild(backBtn);
+    const ghInfo=el('div');
+    ghInfo.appendChild(el('div',{class:'game-header-title'},'💰 قیمت‌یاب ماشین'));
+    ghInfo.appendChild(el('div',{class:'game-header-sub'},`گام ${st.step+1} از ۴`));
+    gh.appendChild(ghInfo);
+    return gh;
+  }
+
+  function render(){
+    root.innerHTML=''; root.appendChild(header());
+    if(st.step===0){
+      root.appendChild(el('div',{class:'section-label',style:{marginBottom:'10px'}},el('span',{},'۱ — ماشین مورد نظر رو انتخاب کن')));
+      const grid=el('div',{class:'price-grid'});
+      CAR_DB.forEach(c=>{
+        const card=el('div',{class:'price-car-card'+(st.car?.id===c.id?' picked':'')});
+        const img=el('img',{src:c.img,alt:c.name});
+        img.onerror=()=>{img.src=`https://placehold.co/300x169/ede7d9/8a7060?text=${encodeURIComponent(c.name)}`;};
+        card.appendChild(el('div',{class:'price-check'},'✓'));
+        card.appendChild(img);
+        const info=el('div',{class:'price-car-info'});
+        info.appendChild(el('div',{class:'price-car-name'},c.name));
+        info.appendChild(el('div',{class:'price-car-tag'},c.tag));
+        card.appendChild(info);
+        card.addEventListener('click',()=>{st.car=c;st.step=1;render();});
+        grid.appendChild(card);
+      });
+      root.appendChild(grid);
+    } else if(st.step===1){
+      root.appendChild(el('div',{class:'section-label'},el('span',{},'۲ — سال تولید؟')));
+      YEARS.forEach(yr=>{
+        const btn=el('button',{class:'ans-btn'+(st.year===yr?' picked':'')});
+        btn.appendChild(el('span',{class:'ans-icon'},'📅'));
+        btn.appendChild(el('span',{class:'flex-1'},yr));
+        btn.addEventListener('click',()=>{st.year=yr;st.step=2;render();});
+        root.appendChild(btn);
+      });
+    } else if(st.step===2){
+      root.appendChild(el('div',{class:'section-label'},el('span',{},'۳ — وضعیت خودرو؟')));
+      CONDS.forEach(c=>{
+        const btn=el('button',{class:'ans-btn'+(st.cond===c?' picked':'')});
+        btn.appendChild(el('span',{class:'ans-icon'},'🔑'));
+        btn.appendChild(el('span',{class:'flex-1'},c.l));
+        btn.addEventListener('click',()=>{st.cond=c;st.step=3;render();});
+        root.appendChild(btn);
+      });
+    } else if(st.step===3){
+      const yf=st.year==='2024'?1.08:st.year==='2022'?0.92:1.0;
+      const pMin=Math.round(st.car.price_min*yf*st.cond.f/100)*100;
+      const pMax=Math.round(st.car.price_max*yf*st.cond.f/100)*100;
+      const res=el('div',{class:'price-result'});
+      res.appendChild(el('div',{style:{textAlign:'center',fontSize:'13px',color:'var(--muted)'},html:'💡 تخمین قیمت بازار تهران'}));
+      res.appendChild(el('div',{class:'price-big'},`${pMin.toLocaleString('fa-IR')} — ${pMax.toLocaleString('fa-IR')} میلیون`));
+      res.appendChild(el('div',{style:{textAlign:'center',marginBottom:'14px'}},el('span',{class:'pill pill-accent'},'⚠️ تقریبی — با کارشناس تأیید کن')));
+      [['مدل',st.car.name+' '+st.year],['وضعیت',st.cond.l],['مبدأ',st.car.origin],['قیمت واردات قشم','تماس برای قیمت دقیق']].forEach(([k,v])=>{
+        const row=el('div',{class:'price-detail'});
+        row.appendChild(el('span',{},k));
+        row.appendChild(el('strong',{},v));
+        res.appendChild(row);
+      });
+      root.appendChild(res);
+      const again=el('button',{class:'btn btn-outline mt12'},'🔄 ماشین دیگری بررسی کنم');
+      again.addEventListener('click',()=>{reset();render();});
+      root.appendChild(again);
+      root.appendChild(buildLeadBox({
+        source:'price_game',resultText:`${st.car.name} ${st.year}`,
+        ctaMsg:`سلام! قیمت دقیق ${st.car.name} مدل ${st.year} (${st.cond.l}) برای واردات از قشم/دبی رو می‌خوام 🙏`,
+        shareText:`${st.car.name} تو بازار ${pMin} تا ${pMax} میلیونه! تو هم بررسی کن 🚗`
+      }));
+    }
+  }
+
+  function init(mountEl){root=mountEl;reset();render();}
+  return {init};
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     ■ MODULE: WHEEL GAME (VIRAL)
+═══════════════════════════════════════════════════ -->
+<script>
+const WheelGame = (() => {
+  const {el,buildLeadBox} = Shared;
+  let root, spinning=false, currentPrize=null, canvas, ctx;
+  const P=WHEEL_PRIZES;
+  const ARC=Math.PI*2/P.length;
+
+  function drawWheel(rotation=0){
+    if(!canvas||!ctx)return;
+    const s=canvas.width, cx=s/2, cy=s/2, r=s/2-4;
+    ctx.clearRect(0,0,s,s);
+    P.forEach((p,i)=>{
+      const start=rotation+i*ARC, end=start+ARC;
+      ctx.beginPath();
+      ctx.moveTo(cx,cy);
+      ctx.arc(cx,cy,r,start,end);
+      ctx.closePath();
+      ctx.fillStyle=p.color;
+      ctx.fill();
+      ctx.strokeStyle='rgba(245,240,232,0.3)';
+      ctx.lineWidth=2;
+      ctx.stroke();
+      ctx.save();
+      ctx.translate(cx,cy);
+      ctx.rotate(start+ARC/2);
+      ctx.textAlign='center';
+      ctx.font='bold 11px Vazirmatn, sans-serif';
+      ctx.fillStyle='rgba(245,240,232,0.95)';
+      ctx.shadowColor='rgba(0,0,0,0.4)';
+      ctx.shadowBlur=3;
+      const maxLen=10;
+      const txt=p.label.length>maxLen?p.label.substring(0,maxLen)+'…':p.label;
+      ctx.fillText(p.icon+' '+txt, r*0.55, 4);
+      ctx.restore();
+    });
+    // Center circle
+    ctx.beginPath();
+    ctx.arc(cx,cy,22,0,Math.PI*2);
+    ctx.fillStyle='#f5f0e8';
+    ctx.fill();
+    ctx.strokeStyle='rgba(184,134,11,0.4)';
+    ctx.lineWidth=2;
+    ctx.stroke();
+    ctx.fillStyle='#b8860b';
+    ctx.font='bold 18px sans-serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText('🚗',cx,cy);
+  }
+
+  function spin(){
+    if(spinning)return;
+    spinning=true;
+    const totalRot=(Math.random()*2+5)*Math.PI*2;
+    const dur=4000;
+    const start=performance.now();
+    let curRot=0;
+
+    function frame(now){
+      const elapsed=now-start;
+      const t=Math.min(elapsed/dur,1);
+      const ease=1-Math.pow(1-t,4);
+      curRot=totalRot*ease;
+      drawWheel(curRot);
+      if(t<1){ requestAnimationFrame(frame); return; }
+      spinning=false;
+      // find prize
+      const norm=((curRot%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+      // pointer is at top (Math.PI*1.5 from 0), pointing up
+      const pointerAngle=(Math.PI*1.5);
+      const relAngle=(pointerAngle-norm+Math.PI*2)%(Math.PI*2);
+      const idx=Math.floor(relAngle/ARC)%P.length;
+      currentPrize=P[idx];
+      showResult();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function showResult(){
+    const resBox=root.querySelector('#wheel-result');
+    if(!resBox)return;
+    resBox.innerHTML='';
+    resBox.classList.remove('hidden');
+    resBox.appendChild(el('div',{class:'wheel-prize-text'},currentPrize.icon+' '+currentPrize.label));
+    if(currentPrize.cta){
+      resBox.appendChild(el('div',{style:{fontSize:'13px',color:'var(--muted)',marginBottom:'10px'}},'تبریک! این جایزه رو دریافت کن:'));
+      resBox.appendChild(buildLeadBox({
+        source:'wheel_game',resultText:currentPrize.label,
+        ctaMsg:`سلام! تو بازی چرخ شانس «${currentPrize.label}» برندم. می‌خوام این جایزه رو دریافت کنم 🎁`,
+        shareText:`تو بازی چرخ شانس «${currentPrize.label}» بردم! تو هم امتحان کن 🎡`
+      }));
+    } else {
+      resBox.appendChild(el('div',{style:{fontSize:'14px',color:'var(--muted)',marginBottom:'10px'}},'بدشانسی! یه بار دیگه امتحان کن'));
+    }
+    const again=el('button',{class:'btn btn-outline mt8'},'🔄 دوباره بچرخون');
+    again.addEventListener('click',()=>{resBox.classList.add('hidden');spinBtn.disabled=false;});
+    resBox.appendChild(again);
+  }
+
+  let spinBtn;
+
+  function render(){
+    root.innerHTML='';
+    const gh=el('div',{class:'game-header'});
+    const backBtn=el('button',{class:'back-btn'},'←');
+    backBtn.addEventListener('click',()=>Shared.Router.go('home'));
+    gh.appendChild(backBtn);
+    const ghInfo=el('div');
+    ghInfo.appendChild(el('div',{class:'game-header-title'},'🎡 چرخ شانس'));
+    ghInfo.appendChild(el('div',{class:'game-header-sub'},'یه چرخش = یه جایزه واردات!'));
+    gh.appendChild(ghInfo);
+    root.appendChild(gh);
+
+    root.appendChild(el('div',{class:'section-label'},el('span',{},'🎁 جوایز این هفته')));
+
+    const wrapOuter=el('div',{class:'wheel-wrap'});
+    const wrapInner=el('div',{class:'wheel-canvas-wrap'});
+    canvas=el('canvas',{id:'wheel',width:'280',height:'280'});
+    ctx=canvas.getContext('2d');
+    wrapInner.appendChild(canvas);
+    wrapOuter.appendChild(el('div',{class:'wheel-pointer'},'▼'));
+    wrapOuter.appendChild(wrapInner);
+    root.appendChild(wrapOuter);
+    drawWheel();
+
+    spinBtn=el('button',{class:'btn btn-gold pulse mt12'},'🎡 بچرخون و جایزه ببر!');
+    spinBtn.addEventListener('click',()=>{ spinBtn.disabled=true; spin(); });
+    root.appendChild(spinBtn);
+
+    root.appendChild(el('div',{id:'wheel-result',class:'hidden wheel-result-box'}));
+  }
+
+  function init(mountEl){root=mountEl;spinning=false;currentPrize=null;render();}
+  return {init};
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     ■ MODULE: COMPARE GAME (VIRAL - WHICH IS MORE EXPENSIVE)
+═══════════════════════════════════════════════════ -->
+<script>
+const CompareGame = (() => {
+  const {el,buildLeadBox} = Shared;
+  let root, st;
+  const ROUNDS=8;
+
+  function reset(){
+    st={idx:0,score:0,results:[],answered:false};
+  }
+
+  function pickPair(){
+    const shuffled=[...CAR_DB].sort(()=>Math.random()-.5);
+    return [shuffled[0],shuffled[1]];
+  }
+
+  function render(){
+    root.innerHTML='';
+    if(st.idx>=ROUNDS) return renderEnd();
+    if(!st.pair) st.pair=pickPair();
+    const [a,b]=st.pair;
+
+    const gh=el('div',{class:'game-header'});
+    const backBtn=el('button',{class:'back-btn'},'←');
+    backBtn.addEventListener('click',()=>Shared.Router.go('home'));
+    gh.appendChild(backBtn);
+    const ghInfo=el('div');
+    ghInfo.appendChild(el('div',{class:'game-header-title'},'⚖️ کدوم گرونتره؟'));
+    ghInfo.appendChild(el('div',{class:'game-header-sub'},`دور ${st.idx+1} از ${ROUNDS}`));
+    gh.appendChild(ghInfo);
+    root.appendChild(gh);
+
+    const hud=el('div',{class:'hud'});
+    hud.appendChild(el('div',{class:'hud-item pts'},el('div',{class:'hv'},String(st.score)),el('div',{class:'hl'},'امتیاز')));
+    hud.appendChild(el('div',{class:'hud-item ok'},el('div',{class:'hv'},String(st.results.filter(r=>r.ok).length)),el('div',{class:'hl'},'درست')));
+    hud.appendChild(el('div',{class:'hud-item bad'},el('div',{class:'hv'},String(st.results.filter(r=>!r.ok).length)),el('div',{class:'hl'},'اشتباه')));
+    root.appendChild(hud);
+
+    const vs=el('div',{class:'compare-vs'});
+    [a,b].forEach((car,ci)=>{
+      const card=el('div',{class:'compare-card',id:`cc${ci}`});
+      const img=el('img',{src:car.img,alt:car.name});
+      img.onerror=()=>{img.src=`https://placehold.co/300x225/ede7d9/8a7060?text=${encodeURIComponent(car.name)}`;};
+      card.appendChild(img);
+      const body=el('div',{class:'compare-card-body'});
+      body.appendChild(el('div',{class:'compare-car-name'},car.name));
+      body.appendChild(el('div',{class:'compare-car-year'},car.year+' — '+car.tag));
+      card.appendChild(body);
+      card.addEventListener('click',()=>{ if(!st.answered) answer(car,a,b); });
+      vs.appendChild(card);
+      if(ci===0) vs.appendChild(el('div',{class:'vs-badge'},'VS'));
+    });
+    root.appendChild(vs);
+
+    root.appendChild(el('div',{style:{textAlign:'center',fontSize:'13px',color:'var(--muted)',marginBottom:'12px'}},'👆 کلیک کن روی ماشینی که فکر می‌کنی گرون‌تره'));
+
+    const fbEl=el('div',{class:'compare-feedback hidden',id:'cg-fb'});
+    root.appendChild(fbEl);
+    const priceEl=el('div',{class:'compare-price-reveal hidden',id:'cg-price'});
+    root.appendChild(priceEl);
+    const nextEl=el('button',{class:'btn btn-gold hidden',id:'cg-next'},'سوال بعدی →');
+    nextEl.addEventListener('click',()=>{st.idx++;st.answered=false;st.pair=null;render();});
+    root.appendChild(nextEl);
+  }
+
+  function answer(picked, a, b){
+    if(st.answered)return;
+    st.answered=true;
+    const expensive=a.price_max>b.price_max?a:b;
+    const ok=(picked.id===expensive.id);
+    const pts=ok?10:0;
+    st.score+=pts;
+    st.results.push({a:a.name,b:b.name,ok,picked:picked.name,correct:expensive.name});
+
+    document.getElementById('cc0').classList.add(a.id===expensive.id?'correct-pick':'wrong-pick');
+    document.getElementById('cc1').classList.add(b.id===expensive.id?'correct-pick':'wrong-pick');
+
+    const fb=document.getElementById('cg-fb');
+    fb.className='compare-feedback '+(ok?'ok':'bad');
+    fb.textContent=ok?`✅ درسته! +${pts} امتیاز`:`❌ اشتباه! ${expensive.name} گرون‌تره`;
+
+    const pr=document.getElementById('cg-price');
+    pr.className='compare-price-reveal';
+    [a,b].forEach(c=>{
+      const box=el('div',{class:'price-reveal-box'+(c.id===expensive.id?' winner':'')});
+      box.appendChild(el('div',{class:'pr-val'},c.price_min+' – '+c.price_max+' M'));
+      box.appendChild(el('div',{class:'pr-lbl'},c.name));
+      pr.appendChild(box);
+    });
+
+    document.getElementById('cg-next').classList.remove('hidden');
+  }
+
+  function renderEnd(){
+    root.innerHTML='';
+    const gh=el('div',{class:'game-header'});
+    const backBtn=el('button',{class:'back-btn'},'←');
+    backBtn.addEventListener('click',()=>Shared.Router.go('home'));
+    gh.appendChild(backBtn);
+    const ghInfo=el('div');
+    ghInfo.appendChild(el('div',{class:'game-header-title'},'🏁 نتیجه چالش قیمت'));
+    gh.appendChild(ghInfo);
+    root.appendChild(gh);
+
+    const ok=st.results.filter(r=>r.ok).length;
+    const pct=Math.round(ok/ROUNDS*100);
+    let emoji,rank;
+    if(pct>=80){emoji='🏆';rank='کارشناس بازار!';}
+    else if(pct>=50){emoji='👍';rank='بد نبودی!';}
+    else{emoji='😅';rank='بازار رو نمی‌شناسی!';}
+
+    const hero=el('div',{class:'result-hero'});
+    hero.appendChild(el('div',{class:'result-emoji'},emoji));
+    hero.appendChild(el('div',{class:'result-car-name',style:{marginTop:'0'}},`${st.score} امتیاز`));
+    hero.appendChild(el('span',{class:pct>=80?'pill pill-gold':pct>=50?'pill pill-green':'pill pill-muted'},rank));
+    hero.appendChild(el('div',{style:{marginTop:'10px',fontSize:'13px',color:'var(--muted)'}},`${ok} از ${ROUNDS} درست حدس زدی`));
+    root.appendChild(hero);
+
+    const det=el('div',{class:'card mt12'});
+    det.appendChild(el('div',{class:'section-label'},el('span',{},'نتایج دورها')));
+    st.results.forEach((r,i)=>{
+      const row=el('div',{class:'price-detail'});
+      row.appendChild(el('span',{style:{fontSize:'11px'}},`${r.a} vs ${r.b}`));
+      row.appendChild(el('strong',{style:{color:r.ok?'var(--green)':'var(--red)',fontSize:'11px'}},r.ok?'✓':r.correct));
+      det.appendChild(row);
+    });
+    root.appendChild(det);
+
+    const again=el('button',{class:'btn btn-outline mt12'},'🔄 دوباره بازی کن');
+    again.addEventListener('click',()=>{reset();render();});
+    root.appendChild(again);
+
+    root.appendChild(buildLeadBox({
+      source:'compare_game',resultText:`${ok}/${ROUNDS} — ${st.score}pts`,
+      ctaMsg:`سلام! تو بازی قیمت‌شناسی ${ok} از ${ROUNDS} رو درست زدم. می‌خوام قیمت واقعی واردات رو بدونم 💰`,
+      shareText:`${ok} از ${ROUNDS} قیمت ماشین رو درست حدس زدم! تو بهتر می‌زنی؟ ⚖️`
+    }));
+  }
+
+  function init(mountEl){root=mountEl;reset();render();}
+  return {init};
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     ■ MODULE: ADMIN PANEL
+═══════════════════════════════════════════════════ -->
+<script>
+const AdminPanel = (() => {
+  const {el,getLeads} = Shared;
+
+  const TODO_LIST = [
+    // GAME ROADMAP
+    {id:'g_blur',cat:'بازی',label:'بازی حدس ماشین تار',detail:'✅ آماده — ۶ ماشین تصادفی',done:true,pri:'low'},
+    {id:'g_pers',cat:'بازی',label:'تست شخصیت ماشین',detail:'✅ آماده — ۶ سوال + ۱۲ ماشین',done:true,pri:'low'},
+    {id:'g_price',cat:'بازی',label:'قیمت‌یاب ماشین',detail:'✅ آماده — ۴ مرحله',done:true,pri:'low'},
+    {id:'g_wheel',cat:'بازی',label:'چرخ شانس واردات',detail:'✅ آماده — ۸ جایزه + لید',done:true,pri:'low'},
+    {id:'g_compare',cat:'بازی',label:'کدوم گرونتره؟',detail:'✅ آماده — ۸ دور + امتیاز',done:true,pri:'low'},
+    {id:'g_race',cat:'بازی جدید',label:'بازی مسابقه ماشین (Race Trivia)',detail:'سوالات فنی ماشین — کاربران رقیب می‌شن',done:false,pri:'high'},
+    {id:'g_auction',cat:'بازی جدید',label:'بازی حراج ماشین (Car Auction)',detail:'مزایده مجازی — کاربر پیشنهاد قیمت می‌ده',done:false,pri:'high'},
+    {id:'g_brand',cat:'بازی جدید',label:'بازی لوگو ماشین',detail:'حدس برند از روی لوگوی تار',done:false,pri:'mid'},
+    {id:'g_sound',cat:'بازی جدید',label:'بازی صدای ماشین',detail:'حدس ماشین از روی صدای موتور (آدیو)',done:false,pri:'mid'},
+    {id:'g_year',cat:'بازی جدید',label:'بازی سال ماشین',detail:'حدس سال تولید از روی عکس',done:false,pri:'low'},
+    // FEATURES
+    {id:'f_tg',cat:'فیچر',label:'اتصال به Telegram Bot',detail:'ارسال لیدها به بات تلگرام به صورت real-time',done:false,pri:'high'},
+    {id:'f_share',cat:'فیچر',label:'کارت اشتراک‌گذاری نتیجه',detail:'تصویر زیبا برای share روی سوشال',done:false,pri:'high'},
+    {id:'f_leaderboard',cat:'فیچر',label:'جدول امتیازات (Leaderboard)',detail:'رتبه‌بندی بازیکنان برای viral',done:false,pri:'mid'},
+    {id:'f_streak',cat:'فیچر',label:'سیستم streak روزانه',detail:'بازی روزانه + جایزه streak',done:false,pri:'mid'},
+    {id:'f_referral',cat:'فیچر',label:'سیستم referral',detail:'هر دعوت = امتیاز + تخفیف',done:false,pri:'high'},
+    // CONTENT
+    {id:'c_img',cat:'محتوا',label:'اضافه کردن عکس واقعی ماشین',detail:'تصاویر باکیفیت از انبار واقعی',done:false,pri:'mid'},
+    {id:'c_prices',cat:'محتوا',label:'آپدیت قیمت‌ها (ماهانه)',detail:'تطابق با نرخ ارز و بازار',done:false,pri:'high'},
+    {id:'c_ar',cat:'محتوا',label:'تور مجازی AR ماشین',detail:'نمایش ۳۶۰ درجه داخل ماشین',done:false,pri:'low'},
+  ];
+
+  function getTodos(){
+    try{ return JSON.parse(localStorage.getItem(CFG.todoKey)||JSON.stringify(TODO_LIST.map(t=>({...t})))); }
+    catch{ return TODO_LIST.map(t=>({...t})); }
+  }
+  function saveTodos(todos){ localStorage.setItem(CFG.todoKey,JSON.stringify(todos)); }
+
+  let root, adminPanel=null;
+
+  function showLogin(){
+    root.innerHTML='';
+    const box=el('div',{class:'admin-login'});
+    const inner=el('div',{class:'admin-login-box'});
+    inner.appendChild(el('div',{class:'admin-login-icon'},'🔐'));
+    inner.appendChild(el('div',{class:'admin-login-title'},'پنل مدیریت'));
+    inner.appendChild(el('div',{class:'admin-login-sub'},CFG.brand));
+    const pw=el('input',{class:'inp',type:'password',placeholder:'رمز عبور...'});
+    const btn=el('button',{class:'btn btn-gold mt8'},'ورود به پنل');
+    const err=el('div',{style:{color:'var(--red)',fontSize:'12px',marginTop:'8px',display:'none'}},'رمز اشتباه است');
+    btn.addEventListener('click',()=>{
+      if(pw.value===CFG.adminPass){ showAdmin(); }
+      else { err.style.display='block'; pw.value=''; pw.focus(); }
+    });
+    pw.addEventListener('keydown',e=>{ if(e.key==='Enter') btn.click(); });
+    inner.appendChild(pw); inner.appendChild(btn); inner.appendChild(err);
+    box.appendChild(inner);
+    root.appendChild(box);
+  }
+
+  function showAdmin(){
+    root.innerHTML='';
+    const app=el('div',{class:'admin-app',style:{paddingBottom:'60px'}});
+
+    // Topbar
+    const topbar=el('div',{class:'admin-topbar'});
+    const tbLeft=el('div');
+    tbLeft.appendChild(el('div',{style:{fontSize:'11px',color:'var(--muted2)'}},'پنل مدیریت'));
+    tbLeft.appendChild(el('h1',{},CFG.brand));
+    const tbRight=el('div',{class:'flex gap8'});
+    const exitBtn=el('button',{class:'btn btn-outline btn-sm'},'خروج');
+    exitBtn.addEventListener('click',()=>{ window.location.hash=''; showLogin(); });
+    tbRight.appendChild(exitBtn);
+    topbar.appendChild(tbLeft); topbar.appendChild(tbRight);
+    app.appendChild(topbar);
+
+    // Admin tabs
+    const TABS=[
+      {id:'dashboard',label:'📊 داشبورد'},
+      {id:'leads',label:'📋 لیدها'},
+      {id:'cars',label:'🚗 ماشین‌ها'},
+      {id:'todos',label:'✅ لیست اقدام'},
+    ];
+    const tabsEl=el('div',{class:'admin-tabs'});
+    const panels={};
+    TABS.forEach(t=>{
+      const tab=el('button',{class:'admin-tab'+(t.id==='dashboard'?' active':'')},t.label);
+      tab.addEventListener('click',()=>{
+        tabsEl.querySelectorAll('.admin-tab').forEach(x=>x.classList.remove('active'));
+        tab.classList.add('active');
+        Object.values(panels).forEach(p=>p.classList.remove('active'));
+        panels[t.id].classList.add('active');
+        renderPanel(t.id,panels[t.id]);
+      });
+      tabsEl.appendChild(tab);
+    });
+    app.appendChild(tabsEl);
+
+    // Panels
+    TABS.forEach(t=>{
+      const p=el('div',{class:'admin-panel'+(t.id==='dashboard'?' active':''),id:'ap-'+t.id});
+      panels[t.id]=p;
+      app.appendChild(p);
+    });
+    renderPanel('dashboard',panels['dashboard']);
+
+    root.appendChild(app);
+  }
+
+  function renderPanel(id,panel){
+    panel.innerHTML='';
+    if(id==='dashboard') renderDashboard(panel);
+    else if(id==='leads') renderLeads(panel);
+    else if(id==='cars') renderCars(panel);
+    else if(id==='todos') renderTodos(panel);
+  }
+
+  function renderDashboard(p){
+    const leads=getLeads();
+    const bySource={};
+    leads.forEach(l=>{ bySource[l.source]=(bySource[l.source]||0)+1; });
+    const today=leads.filter(l=>new Date(l.at).toDateString()===new Date().toDateString()).length;
+
+    const sg=el('div',{class:'stats-grid'});
+    [[leads.length,'کل لیدها','🎯'],[today,'امروز','📅'],[Object.keys(bySource).length,'منابع','🎮']].forEach(([v,l,ic])=>{
+      const s=el('div',{class:'stat-card'});
+      s.appendChild(el('div',{style:{fontSize:'1.5rem',marginBottom:'4px'}},ic));
+      s.appendChild(el('div',{class:'sv'},String(v)));
+      s.appendChild(el('div',{class:'sl'},l));
+      sg.appendChild(s);
+    });
+    p.appendChild(sg);
+
+    p.appendChild(el('div',{class:'section-label'},el('span',{},'📊 لیدها بر اساس بازی')));
+    const srcCard=el('div',{class:'card'});
+    const srcLabels={'blur_game':'🔍 حدس تار','personality':'🧬 شخصیت‌سنجی','price_game':'💰 قیمت‌یاب','wheel_game':'🎡 چرخ شانس','compare_game':'⚖️ چالش قیمت'};
+    if(Object.keys(bySource).length===0){
+      srcCard.appendChild(el('div',{style:{color:'var(--muted)',fontSize:'13px',padding:'10px 0',textAlign:'center'}},'هنوز لیدی ثبت نشده'));
+    } else {
+      Object.entries(bySource).forEach(([src,cnt])=>{
+        const row=el('div',{class:'price-detail'});
+        row.appendChild(el('span',{},(srcLabels[src]||src)));
+        row.appendChild(el('strong',{class:'pill pill-gold'},String(cnt)+' لید'));
+        srcCard.appendChild(row);
+      });
+    }
+    p.appendChild(srcCard);
+
+    p.appendChild(el('div',{class:'section-label',style:{marginTop:'16px'}},el('span',{},'🔗 لینک‌های سریع')));
+    const btnRow=el('div',{class:'flex gap8'});
+    const tgBtn=el('a',{class:'btn btn-tg',href:'https://t.me/'+CFG.tg,target:'_blank'});
+    tgBtn.innerHTML='📱 تلگرام';
+    const exportBtn=el('button',{class:'btn btn-accent'},'📤 خروجی CSV');
+    exportBtn.addEventListener('click',()=>exportCSV());
+    btnRow.appendChild(tgBtn); btnRow.appendChild(exportBtn);
+    p.appendChild(btnRow);
+  }
+
+  function renderLeads(p){
+    const leads=getLeads();
+    if(leads.length===0){
+      p.appendChild(el('div',{class:'card',style:{textAlign:'center',color:'var(--muted)',padding:'30px'}},el('div',{style:{fontSize:'2.5rem',marginBottom:'8px'}},'📭'),el('div',{},'هنوز لیدی ثبت نشده')));
+      return;
+    }
+    const actions=el('div',{class:'flex gap8',style:{marginBottom:'12px'}});
+    const clrBtn=el('button',{class:'btn btn-outline btn-sm',style:{color:'var(--red)',borderColor:'var(--red)'}},'🗑️ حذف همه');
+    clrBtn.addEventListener('click',()=>{
+      if(confirm('همه لیدها حذف شوند؟')){ localStorage.removeItem(CFG.leadKey); renderPanel('leads',p); }
+    });
+    const expBtn=el('button',{class:'btn btn-gold btn-sm'},'📤 CSV');
+    expBtn.addEventListener('click',()=>exportCSV());
+    actions.appendChild(expBtn); actions.appendChild(clrBtn);
+    p.appendChild(actions);
+
+    const wrap=el('div',{class:'leads-table'});
+    const tbl=el('table');
+    const thead=el('tr');
+    ['نام','شماره','منبع','نتیجه','تاریخ'].forEach(h=>thead.appendChild(el('th',{},h)));
+    tbl.appendChild(el('thead',{},thead));
+    const tbody=el('tbody');
+    leads.forEach(l=>{
+      const tr=el('tr');
+      const d=new Date(l.at);
+      const date=`${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+      [l.name||'—',l.phone||'—',l.source||'—',(l.result||'—').substring(0,20),date].forEach(v=>tr.appendChild(el('td',{},v)));
+      tbody.appendChild(tr);
+    });
+    tbl.appendChild(tbody);
+    wrap.appendChild(tbl);
+    p.appendChild(wrap);
+  }
+
+  function renderCars(p){
+    const addBtn=el('button',{class:'btn btn-gold btn-sm',style:{marginBottom:'12px',width:'auto',padding:'10px 20px'}},'➕ ماشین جدید');
+    addBtn.addEventListener('click',()=>showCarModal(null,()=>renderPanel('cars',p)));
+    p.appendChild(addBtn);
+
+    CAR_DB.forEach(car=>{
+      const item=el('div',{class:'car-item'});
+      const img=el('img',{src:car.img,alt:car.name,style:{width:'64px',height:'42px',objectFit:'cover',borderRadius:'6px',flexShrink:'0'}});
+      img.onerror=()=>{img.style.display='none';};
+      const info=el('div',{class:'car-item-info'});
+      info.appendChild(el('div',{class:'car-item-name'},car.name+' '+car.year));
+      info.appendChild(el('div',{class:'car-item-tag'},car.tag+' • '+car.price_min+'–'+car.price_max+' M'));
+      const acts=el('div',{class:'car-item-actions'});
+      const editBtn=el('button',{class:'icon-btn'},'✏️');
+      editBtn.addEventListener('click',()=>showCarModal(car,()=>renderPanel('cars',p)));
+      const delBtn=el('button',{class:'icon-btn del'},'🗑️');
+      delBtn.addEventListener('click',()=>{ if(confirm(`${car.name} حذف شود؟`)){ const i=CAR_DB.indexOf(car);if(i>-1)CAR_DB.splice(i,1);renderPanel('cars',p); } });
+      acts.appendChild(editBtn); acts.appendChild(delBtn);
+      item.appendChild(img); item.appendChild(info); item.appendChild(acts);
+      p.appendChild(item);
+    });
+  }
+
+  function showCarModal(car, onSave){
+    const ov=el('div',{class:'modal-overlay'});
+    const modal=el('div',{class:'modal'});
+    const isNew=!car;
+    const data=car?{...car}:{id:'',name:'',year:'2024',tag:'',img:'',price_min:0,price_max:0,origin:'',dims:{luxury:5,offroad:5,family:5,tech:5,economy:5,sport:5},pers:{emoji:'🚗',desc:''}};
+    modal.appendChild(el('div',{class:'modal-title'},(isNew?'➕ ماشین جدید':'✏️ ویرایش ماشین')));
+    const cls=el('span',{class:'modal-close'},'✕');
+    cls.addEventListener('click',()=>{ ov.classList.remove('open'); setTimeout(()=>ov.remove(),300); });
+    modal.querySelector('.modal-title').prepend(cls);
+
+    const fields=[
+      ['نام ماشین','name','text',data.name],
+      ['شناسه (id)','id','text',data.id],
+      ['سال','year','text',data.year],
+      ['دسته‌بندی','tag','text',data.tag],
+      ['لینک عکس','img','url',data.img],
+      ['حداقل قیمت (میلیون)','price_min','number',data.price_min],
+      ['حداکثر قیمت (میلیون)','price_max','number',data.price_max],
+      ['کشور مبدأ','origin','text',data.origin],
+      ['ایموجی شخصیت','emoji','text',data.pers.emoji],
+      ['توضیح شخصیت','desc','text',data.pers.desc],
+    ];
+    const inputs={};
+    fields.forEach(([lbl,key,type,val])=>{
+      modal.appendChild(el('div',{style:{fontSize:'12px',color:'var(--muted)',marginBottom:'4px'}},lbl));
+      const inp=el('input',{class:'inp',type,placeholder:lbl,value:String(val)});
+      inputs[key]=inp;
+      modal.appendChild(inp);
+    });
+
+    const saveBtn=el('button',{class:'btn btn-gold mt8'},'💾 ذخیره');
+    saveBtn.addEventListener('click',()=>{
+      const d={
+        id:inputs.id.value||data.id,
+        name:inputs.name.value,year:inputs.year.value,
+        tag:inputs.tag.value,img:inputs.img.value,
+        price_min:+inputs.price_min.value,price_max:+inputs.price_max.value,
+        origin:inputs.origin.value,
+        dims:data.dims,
+        pers:{emoji:inputs.emoji.value,desc:inputs.desc.value}
+      };
+      if(isNew){ CAR_DB.push(d); }
+      else { Object.assign(car,d); }
+      ov.classList.remove('open');
+      setTimeout(()=>{ov.remove();onSave();},300);
+    });
+    modal.appendChild(saveBtn);
+    ov.appendChild(modal);
+    document.body.appendChild(ov);
+    requestAnimationFrame(()=>ov.classList.add('open'));
+  }
+
+  function renderTodos(p){
+    const todos=getTodos();
+    const cats=[...new Set(todos.map(t=>t.cat))];
+
+    p.appendChild(el('div',{class:'section-label'},el('span',{},'📋 لیست کامل اقدامات و بازی‌های آینده')));
+
+    cats.forEach(cat=>{
+      const catTodos=todos.filter(t=>t.cat===cat);
+      const hdr=el('div',{style:{fontSize:'12px',fontWeight:'700',color:'var(--accent)',margin:'14px 0 8px',letterSpacing:'.05em'}},`— ${cat} —`);
+      p.appendChild(hdr);
+
+      catTodos.forEach((todo,localIdx)=>{
+        const globalIdx=todos.indexOf(todo);
+        const item=el('div',{class:'todo-item'+(todo.done?' done':'')});
+        const check=el('div',{class:'todo-check'});
+        if(todo.done) check.innerHTML='<svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+        check.addEventListener('click',()=>{
+          todos[globalIdx].done=!todos[globalIdx].done;
+          saveTodos(todos);
+          renderPanel('todos',p);
+        });
+        const info=el('div',{class:'todo-item-label'});
+        info.appendChild(document.createTextNode(todo.label));
+        info.appendChild(el('small',{},todo.detail));
+        const pri=el('span',{class:'todo-priority '+todo.pri},todo.pri==='high'?'فوری':todo.pri==='mid'?'متوسط':'کم‌اولویت');
+        item.appendChild(check); item.appendChild(info); item.appendChild(pri);
+        p.appendChild(item);
+      });
+    });
+  }
+
+  function exportCSV(){
+    const leads=getLeads();
+    const rows=[['نام','شماره','منبع','نتیجه','تاریخ'],...leads.map(l=>[l.name||'',l.phone||'',l.source||'',l.result||'',new Date(l.at).toLocaleString('fa-IR')])];
+    const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+    const b=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(b);
+    a.download='leads_'+Date.now()+'.csv';
+    a.click();
+  }
+
+  function init(mountEl){ root=mountEl; showLogin(); }
+  return {init};
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     ■ APP BOOTSTRAP
+═══════════════════════════════════════════════════ -->
+<script>
+(function() {
+  const appRoot = document.getElementById('app');
+
+  // Decide: admin or user
+  const isAdmin = location.search.includes('admin=1') || location.hash==='#admin';
+
+  if(isAdmin){
+    const adminRoot = document.createElement('div');
+    adminRoot.style.cssText='min-height:100vh;background:var(--bg)';
+    appRoot.appendChild(adminRoot);
+    AdminPanel.init(adminRoot);
+    return;
+  }
+
+  // Build user screens
+  const SCREENS = ['home','blur','personality','price','wheel','compare'];
+  SCREENS.forEach(id=>{
+    const s = document.createElement('div');
+    s.className = 'screen';
+    s.id = 'screen-'+id;
+    appRoot.appendChild(s);
+  });
+
+  // Init Router
+  const router = Shared.Router;
+
+  // Game init map
+  const GAMES = {
+    blur: BlurGame,
+    personality: PersonalityGame,
+    price: PriceGame,
+    wheel: WheelGame,
+    compare: CompareGame,
+  };
+  const initialized = {};
+
+  // Override Router.go to lazily init games
+  const origGo = router.go.bind(router);
+  Shared.Router.go = function(id) {
+    origGo(id);
+    if(id==='home'){
+      HomeScreen.init(document.getElementById('screen-home'));
+    } else if(GAMES[id] && !initialized[id]){
+      initialized[id]=true;
+      GAMES[id].init(document.getElementById('screen-'+id));
+    } else if(GAMES[id]){
+      // Re-init on revisit
+      GAMES[id].init(document.getElementById('screen-'+id));
+    }
+  };
+
+  // Start
+  HomeScreen.init(document.getElementById('screen-home'));
+  document.getElementById('screen-home').classList.add('active');
+
+  // Telegram WebApp
+  try {
+    const tg = window.Telegram?.WebApp;
+    if(tg){ tg.ready(); tg.expand(); }
+  } catch {}
+})();
+</script>
+
+</body>
+</html>
